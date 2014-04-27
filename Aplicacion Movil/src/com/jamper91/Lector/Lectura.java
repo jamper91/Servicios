@@ -9,6 +9,7 @@ import com.jamper91.Administrador.DialogoArchivos;
 import com.jamper91.Lector.DialogoCausal.DialogoCausalListener;
 import com.jamper91.Lector.DialogoObservaciones.DialogoObservacionesListener;
 import com.jamper91.Lector.DialogoReenrutar.DialogoReenrutarListener;
+import com.jamper91.Lector.DialogoValidar.DialogoValidarListener;
 import com.jamper91.base.Administrador;
 import com.jamper91.servicios.R;
 
@@ -34,7 +35,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class Lectura extends Activity implements DialogoCausalListener,DialogoObservacionesListener, DialogoReenrutarListener {
+public class Lectura extends Activity implements DialogoCausalListener,DialogoObservacionesListener, DialogoReenrutarListener,DialogoValidarListener {
 
 	//Elementos que recibe este intent
 	private String cantidad, matricula;
@@ -43,7 +44,9 @@ public class Lectura extends Activity implements DialogoCausalListener,DialogoOb
 	private int nCiclo, nRuta, nConsecutivo;
 	private Administrador admin = Administrador.getInstance(this);
 	
-
+	//Variable para determinar si tengo que hacer una validacion al usuario
+	private boolean validar=false;
+	
 	/**
 	 * Elementos de la interfaz grafica
 	 */
@@ -52,6 +55,11 @@ public class Lectura extends Activity implements DialogoCausalListener,DialogoOb
 	ImageButton btnRegistrar, btnAnterior, btnSiguiente,btnSalir,btnReenrutar;
 	ImageView btnCausal, btnObservacion;
 
+	/**
+	 * Elementos que actualizaran la interfaz grafica
+	 * 
+	 */
+	String Dlectura,DCantidad,DMatricula,DEnrutamiento,DDireccion,DCausal,DNumContador,DTipoContador,DObservaciones,posicion;
 	//Elementos a enviar al dialogo que crear las causales
 	private String enrutamiento,rutaFoto=null,causal=null;
 	
@@ -75,10 +83,41 @@ public class Lectura extends Activity implements DialogoCausalListener,DialogoOb
 		// inicializo los elementos necesarios
 		inicializar();
 		consultar();
-		
+		validar();
+		if(!validar)
+			actualizarGUI();
+		else{
+			//Hago la validacion
+			hacerValidacion();
+		}
 
 	}
+	private void hacerValidacion()
+	{
+		//Muestro un dialogo donde pido el numero del contador
+		DialogFragment dia= new DialogoValidar();
+		dia.show(getFragmentManager(), "DialogoValidarListener");
+	}
+	private void validar()
+	{
+		
+		try {
+			int dato = Integer.parseInt(admin.getParametroByNombre("validar"));
+			Log.i("validar", "Datos: " + dato);
+			if (dato != 0) {
+				//Determino si este elemento es multiplo del de validar
+				int pos = Integer.parseInt(posicion);
+				Log.i("validar", "Datos: " + dato + " --Pos: " + pos);
+				if (pos % dato == 0) {
+					validar = true;
+				}
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			Log.e("validar", e.toString());
+		}
 
+	}
 	private void inicializar() {
 		txtMatricula = (TextView) findViewById(R.id.Lectura_txtMatricula);
 		txtEnrutamiento = (TextView) findViewById(R.id.Lectura_txtEnrutamiento);
@@ -118,53 +157,50 @@ public class Lectura extends Activity implements DialogoCausalListener,DialogoOb
 				try
 				{
 					if(!lectura.get("Matricula").equals("null"))
-						txtMatricula.setText(lectura.get("Matricula"));
+						DMatricula=lectura.get("Matricula");
 				}catch(Exception e)
 				{
-					txtMatricula.setText("Error");
+						DMatricula="Error";
 				}
 				
-				String enru = null;
 				try {
-					enru = lectura.get("Ciclo") + "-" + lectura.get("Ruta") + "-"
-							+ lectura.get("Consecutivo");
 					this.consecutivo=Integer.parseInt(lectura.get("Consecutivo"));
-					txtEnrutamiento.setText(enru);
+					DEnrutamiento=lectura.get("Ciclo") + "-" + lectura.get("Ruta") + "-"
+							+ lectura.get("Consecutivo");
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
-					e1.printStackTrace();
-					txtEnrutamiento.setText("Error");
+					//e1.printStackTrace();
+					//txtEnrutamiento.setText("Error");
+					DEnrutamiento="Error";
 				}
 				try {
-					txtDireccion.setText(lectura.get("Direccion"));
+					//txtDireccion.setText(lectura.get("Direccion"));
+					DDireccion=lectura.get("Direccion");
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
-					e1.printStackTrace();
-					txtDireccion.setText("Error");
+					//e1.printStackTrace();
+					//txtDireccion.setText("Error");
+					DDireccion="Error";
 				}
 				
 				try {
-					txtLectura.setText(lectura.get("NuevaLectura"));
+					Dlectura=lectura.get("NuevaLectura");
+					if(Dlectura.equals("null"))
+						Dlectura="";
 				} catch (Exception e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-					txtLectura.setText("Error");
+					Dlectura="Error";	
 					
 				}
 				
 				try {
-					txtnumContador.setText(lectura.get("NumMedidor"));
+					DNumContador=lectura.get("NumMedidor");
 				} catch (Exception e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-					txtnumContador.setText("Error");
+					DNumContador="Error";
 				}
 				try {
-					txttipoContador.setText(lectura.get("TipoMedidor"));
+					DTipoContador=lectura.get("TipoMedidor");
 				} catch (Exception e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-					txttipoContador.setText("Error");
+					DTipoContador="Error";
 					
 				}
 				//Actualizo las variables globales de ciclo y ruta;
@@ -259,9 +295,9 @@ public class Lectura extends Activity implements DialogoCausalListener,DialogoOb
 				
 				//Consulto la posicion de esta matricual entre el resto del mismo cilo ruta
 				try {
-					String pos=admin.getPosicionUltimaLecturaEditada(String.valueOf(this.id), this.ciclo, this.ruta);
-					pos=Integer.parseInt(pos)+1+"";
-					this.txtCantidad.setText(pos+"/"+cantidad);
+					posicion=admin.getPosicionUltimaLecturaEditada(String.valueOf(this.id), this.ciclo, this.ruta);
+					posicion=Integer.parseInt(posicion)+1+"";
+					this.txtCantidad.setText(posicion+"/"+cantidad);
 				} catch (Exception e) {
 					// TODO: handle exception
 					this.txtCantidad.setText("x/"+cantidad);
@@ -275,7 +311,19 @@ public class Lectura extends Activity implements DialogoCausalListener,DialogoOb
 		}
 		
 	}
-
+	/**
+	 * Esta funcion se encarga de mostrar los datos consultados en la interfas grafica
+	 */
+	private void actualizarGUI()
+	{
+		txtMatricula.setText(DMatricula);
+		txtEnrutamiento.setText(DEnrutamiento);
+		txtDireccion.setText(DDireccion);
+		txtLectura.setText(Dlectura);
+		txtnumContador.setText(DNumContador);
+		txttipoContador.setText(DTipoContador);
+	}
+	
 	@SuppressLint("NewApi")
 	public void accion(View v) {
 		switch (v.getId()) {
@@ -553,6 +601,23 @@ public class Lectura extends Activity implements DialogoCausalListener,DialogoOb
 		nCiclo=nciclo;
 		nRuta=nruta;
 		nConsecutivo=nconsecutivo;
+		
+	}
+	@Override
+	public void onDialogValidarAceptarClick(DialogFragment dialog,
+			String numeroContador) {
+		
+		Log.i("onDialogValidarAceptarClick", numeroContador);
+		Log.i("DNumContador", DNumContador);
+		if(numeroContador.equals(DNumContador))
+		{
+			actualizarGUI();
+		}else{
+			dialogo("EL numero del contador no coincide, verifique por favor","Datos incorrectos");
+			this.btnSiguiente.setEnabled(false);
+			this.btnRegistrar.setEnabled(false);
+			this.btnReenrutar.setEnabled(false);
+		}
 		
 	}
 }

@@ -32,8 +32,9 @@
         <activity android:name="com.jamper91.Administrador.MenuAdmin"></activity>
         <activity android:name="com.jamper91.Lector.MenuLector"></activity>
         <activity android:name="com.jamper91.Lector.Lectura"></activity>
-        <activity android:name="com.jamper91.Lector.DialogoCausal1" android:theme="@android:style/Theme.Holo.Light.Dialog"></activity>
+        <activity android:name="com.jamper91.Lector.DialogoCausal" android:theme="@android:style/Theme.Holo.Light.Dialog"></activity>
         <activity android:name="com.jamper91.Lector.Reporte"></activity>
+        <activity android:name="com.jamper91.Administrador.Preferencias"></activity>
     </application>
 
 </manifest>
