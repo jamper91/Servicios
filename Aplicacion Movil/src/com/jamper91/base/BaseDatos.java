@@ -1,6 +1,7 @@
 package com.jamper91.base;
 
 import java.util.Date;
+import java.util.Hashtable;
 import java.util.Vector;
 
 import android.content.Context;
@@ -31,7 +32,7 @@ public class BaseDatos extends SQLiteOpenHelper {
 		Log.e("onCreate", "Creandose por primera vez");
 		String sql = "CREATE TABLE Causales (   CodigoCausal integer NOT NULL,   Descripcion text );";
 		arg0.execSQL(sql);
-		sql = "CREATE TABLE Lecturas (Matricula text NOT NULL,   Ciclo text,   Ruta text,   Consecutivo integer,   Direccion text,   NumMedidor text, TipoMedidor integer,   LecturaAnterior integer,   ConsumoMedio integer,   NuevoCiclo integer,   NuevaRuta integer,   NuevoConsecutivo integer,   NuevaLectura integer,   Observacion1 integer,   Observacion2 integer,   Observacion3 integer,   Causal integer,   Foto text,   FechaHora text,   Latitud text,   Longitud text,   Altitud text,   Intentos integer,   Login text,   id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL  ) ";
+		sql = "CREATE TABLE Lecturas (Matricula text NOT NULL,   Ciclo text,   Ruta text,   Consecutivo integer,   Direccion text,   NumMedidor text, TipoMedidor integer,   LecturaAnterior integer,   ConsumoMedio integer,   NuevoCiclo integer,   NuevaRuta integer,   NuevoConsecutivo integer,   NuevaLectura integer,   Observacion1 integer,   Observacion2 integer,   Observacion3 integer,   Causal integer,   Foto text,   FechaHora text,   Latitud text,   Longitud text,   Altitud text,   Intentos integer,   Login text,   id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, Nombre text  ) ";
 		arg0.execSQL(sql);
 		sql = "CREATE TABLE Observaciones (   CodigoObservacion integer NOT NULL,   Descripcion text ) ";
 		arg0.execSQL(sql);
@@ -69,7 +70,7 @@ public class BaseDatos extends SQLiteOpenHelper {
 
 		sql = "CREATE TABLE Causales (   CodigoCausal integer NOT NULL,   Descripcion text );";
 		arg0.execSQL(sql);
-		sql = "CREATE TABLE Lecturas (   Matricula text NOT NULL,   Ciclo text,   Ruta text,   Consecutivo integer,   Direccion text,   NumMedidor text, TipoMedidor integer,  LecturaAnterior integer,   ConsumoMedio integer,   NuevoCiclo integer,   NuevaRuta integer,   NuevoConsecutivo integer,   NuevaLectura integer,   Observacion1 integer,   Observacion2 integer,   Observacion3 integer,   Causal integer,   Foto text,   FechaHora text,   Latitud text,   Longitud text,   Altitud text,   Intentos integer,   Login text,   id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL) ";
+		sql = "CREATE TABLE Lecturas (   Matricula text NOT NULL,   Ciclo text,   Ruta text,   Consecutivo integer,   Direccion text,   NumMedidor text, TipoMedidor integer,  LecturaAnterior integer,   ConsumoMedio integer,   NuevoCiclo integer,   NuevaRuta integer,   NuevoConsecutivo integer,   NuevaLectura integer,   Observacion1 integer,   Observacion2 integer,   Observacion3 integer,   Causal integer,   Foto text,   FechaHora text,   Latitud text,   Longitud text,   Altitud text,   Intentos integer,   Login text,   id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, Nombre text) ";
 		arg0.execSQL(sql);
 		sql = "CREATE TABLE Observaciones (   CodigoObservacion integer NOT NULL,   Descripcion text ) ";
 		arg0.execSQL(sql);
@@ -178,10 +179,10 @@ public class BaseDatos extends SQLiteOpenHelper {
 	 */
 	public void addLecturas(String matricula, int ciclo, int ruta,
 			int consecutivo, String direccion, String numeroMedidor,
-			int tipoMedidor, int lecturaAnterior, int consumoMedio) {
-		Log.i("consumo medio", consumoMedio+"");
+			int tipoMedidor, int lecturaAnterior, int consumoMedio,String nombre) {
+		Log.i("nombre", nombre+"");
 		SQLiteDatabase db = getWritableDatabase();
-		db.execSQL("insert into Lecturas (Matricula,Ciclo, Ruta, Consecutivo, Direccion, NumMedidor, TipoMedidor, LecturaAnterior, ConsumoMedio) VALUES('"
+		db.execSQL("insert into Lecturas (Matricula,Ciclo, Ruta, Consecutivo, Direccion, NumMedidor, TipoMedidor, LecturaAnterior, ConsumoMedio, Nombre) VALUES('"
 				+ matricula
 				+ "',"
 				+ ciclo
@@ -195,7 +196,13 @@ public class BaseDatos extends SQLiteOpenHelper {
 				+ numeroMedidor
 				+ "',"
 				+ tipoMedidor
-				+ "," + lecturaAnterior + "," + consumoMedio + ");");
+				+ "," 
+				+ lecturaAnterior 
+				+ "," 
+				+ consumoMedio
+				+ ",'"
+				+ nombre
+				+ "');");
 		db.close();
 
 	}
@@ -384,7 +391,7 @@ public class BaseDatos extends SQLiteOpenHelper {
 					+ c.getInt(15) + "," + c.getInt(16) + "," + c.getInt(17)
 					+ "," + c.getInt(18) + "," + c.getInt(19) + ","
 					+ c.getInt(20) + "," + c.getInt(21) + "," + c.getInt(22)
-					+ "," + c.getInt(23) + "," + c.getInt(24) + ";");
+					+ "," + c.getInt(23) + "," + c.getInt(24) + c.getShort(25)+";");
 		}
 		db.close();
 		return usuarios;
@@ -565,9 +572,21 @@ public class BaseDatos extends SQLiteOpenHelper {
 		try {
 
 			SQLiteDatabase db = getReadableDatabase();
+//			String sql="select count(Matricula) as cantidad from Lecturas " +
+//					"where " +
+//					"(Ciclo=$1 and Ruta=$2 and NuevoCiclo=null and NuevaRuta=null) " +
+//					"or " +
+//					"(NuevoCiclo=$1 and NuevaRuta=$2)";
+//			sql=sql.replace("$1", ciclo+"");
+//			sql=sql.replace("$2", ruta+"");
+//			sql=sql.replace("$1", ciclo+"");
+//			sql=sql.replace("$2", ruta+"");
+//			Log.i("sql", sql);
+//			Cursor c=db.rawQuery(sql, null);
 			Cursor c = db.rawQuery(
 					"select count(Matricula) as cantidad from Lecturas where Ciclo="
 							+ ciclo + " and Ruta=" + ruta, null);
+			
 			if (c != null) {
 				c.moveToFirst();
 				retornar.add(c.getString(0));
@@ -589,10 +608,11 @@ public class BaseDatos extends SQLiteOpenHelper {
 
 	}
 
-	public Vector<String> getLecturaByMatricula(String matricula) 
+	public Hashtable<String, String> getLecturaByMatricula(String matricula) 
 	{
 		Log.i("getLecturaByMatricula", "Matricula: "+matricula);
 		Vector<String> retornar = new Vector<String>();
+		Hashtable<String, String> datos = new Hashtable<String, String>();
 		try {
 
 			SQLiteDatabase db = getReadableDatabase();
@@ -600,38 +620,22 @@ public class BaseDatos extends SQLiteOpenHelper {
 					+ matricula, null);
 			if (c != null) {
 				while (c.moveToNext()) {
-					retornar.add(c.getString(0));
-					retornar.add(c.getString(1));
-					retornar.add(c.getString(2));
-					retornar.add(c.getString(3));
-					retornar.add(c.getString(4));
-					retornar.add(c.getString(5));
-					retornar.add(c.getString(6));
-					retornar.add(c.getString(7));
-					retornar.add(c.getString(8));
-					retornar.add(c.getString(9));
-					retornar.add(c.getString(10));
-					retornar.add(c.getString(11));
-					retornar.add(c.getString(12));
-					retornar.add(c.getString(13));
-					retornar.add(c.getString(14));
-					retornar.add(c.getString(15));
-					retornar.add(c.getString(16));
-					retornar.add(c.getString(17));
-					retornar.add(c.getString(18));
-					retornar.add(c.getString(19));
-					retornar.add(c.getString(20));
-					retornar.add(c.getString(21));
-					retornar.add(c.getString(22));
-					retornar.add(c.getString(23));
-					retornar.add(c.getString(24));
+					for(int i=0;i<c.getColumnCount();i++)
+					{
+						if(c.getString(i)!=null)
+						{
+							datos.put(c.getColumnName(i), c.getString(i));
+						}else
+							datos.put(c.getColumnName(i), "null");
+						
+					}
 				}
 
 			}
 			db.close();
 			Log.i("getLecturaByMatricula", "Size:"+retornar.size());
-			if (retornar.size() > 0)
-				return retornar;
+			if (datos.size() > 0)
+				return datos;
 			else
 				return null;
 		} catch (Exception e) {

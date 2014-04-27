@@ -2,6 +2,7 @@ package com.jamper91.Lector;
 
 import java.io.File;
 import java.util.Date;
+import java.util.Hashtable;
 import java.util.Vector;
 
 import com.jamper91.Administrador.DialogoArchivos;
@@ -47,7 +48,7 @@ public class Lectura extends Activity implements DialogoCausalListener,DialogoOb
 	 * Elementos de la interfaz grafica
 	 */
 	EditText txtLectura;
-	TextView txtCantidad, txtMatricula, txtEnrutamiento, txtDireccion,lblCausal,txtnumContador,txttipoContador,lblObservacion;
+	TextView txtCantidad, txtMatricula, txtEnrutamiento, txtDireccion,lblCausal,txtnumContador,txttipoContador,lblObservacion,txtUsuario;
 	ImageButton btnRegistrar, btnAnterior, btnSiguiente,btnSalir,btnReenrutar;
 	ImageView btnCausal, btnObservacion;
 
@@ -96,6 +97,7 @@ public class Lectura extends Activity implements DialogoCausalListener,DialogoOb
 		lblObservacion=(TextView)findViewById(R.id.Lectura_lblObservacion);
 		btnSalir=(ImageButton)findViewById(R.id.Lectura_btnSalir);
 		btnReenrutar=(ImageButton)findViewById(R.id.Lectura_btnReenrutar);
+		txtUsuario=(TextView)findViewById(R.id.Lectura_txtUsuario);
 	}
 
 	// Esta funcion se encarga de consultar en la base de datos la informacion
@@ -103,15 +105,20 @@ public class Lectura extends Activity implements DialogoCausalListener,DialogoOb
 	private void consultar() 
 	{
 		try{
-			Vector<String> lectura = admin.getLecturaMatricula(matricula);
+			Hashtable<String, String> lectura = admin.getLecturaMatricula(matricula);
 			Log.i("consultar", "lectura: "+lectura.toString());
 			if (lectura != null) {
 			
 				//Actualizo la para que el usuario la vea
-				
+				try{
+					txtUsuario.setText(txtUsuario.getText()+" "+lectura.get("Nombre"));
+				}catch(Exception e){
+					
+				}
 				try
 				{
-					txtMatricula.setText(lectura.get(0));
+					if(!lectura.get("Matricula").equals("null"))
+						txtMatricula.setText(lectura.get("Matricula"));
 				}catch(Exception e)
 				{
 					txtMatricula.setText("Error");
@@ -119,9 +126,9 @@ public class Lectura extends Activity implements DialogoCausalListener,DialogoOb
 				
 				String enru = null;
 				try {
-					enru = lectura.get(1) + "-" + lectura.get(2) + "-"
-							+ lectura.get(3);
-					this.consecutivo=Integer.parseInt(lectura.get(3));
+					enru = lectura.get("Ciclo") + "-" + lectura.get("Ruta") + "-"
+							+ lectura.get("Consecutivo");
+					this.consecutivo=Integer.parseInt(lectura.get("Consecutivo"));
 					txtEnrutamiento.setText(enru);
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
@@ -129,7 +136,7 @@ public class Lectura extends Activity implements DialogoCausalListener,DialogoOb
 					txtEnrutamiento.setText("Error");
 				}
 				try {
-					txtDireccion.setText(lectura.get(4));
+					txtDireccion.setText(lectura.get("Direccion"));
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -137,7 +144,7 @@ public class Lectura extends Activity implements DialogoCausalListener,DialogoOb
 				}
 				
 				try {
-					txtLectura.setText(lectura.get(12));
+					txtLectura.setText(lectura.get("NuevaLectura"));
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -146,14 +153,14 @@ public class Lectura extends Activity implements DialogoCausalListener,DialogoOb
 				}
 				
 				try {
-					txtnumContador.setText(lectura.get(5));
+					txtnumContador.setText(lectura.get("NumMedidor"));
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 					txtnumContador.setText("Error");
 				}
 				try {
-					txttipoContador.setText(lectura.get(6));
+					txttipoContador.setText(lectura.get("TipoMedidor"));
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -162,25 +169,25 @@ public class Lectura extends Activity implements DialogoCausalListener,DialogoOb
 				}
 				//Actualizo las variables globales de ciclo y ruta;
 				try {
-					this.ruta=Integer.parseInt(lectura.get(2));
+					this.ruta=Integer.parseInt(lectura.get("Ruta"));
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 				try {
-					this.ciclo=Integer.parseInt(lectura.get(1));
+					this.ciclo=Integer.parseInt(lectura.get("Ciclo"));
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 				try {
-					this.id=Integer.parseInt(lectura.get(24));
+					this.id=Integer.parseInt(lectura.get("id"));
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 				try {
-					this.causal=lectura.get(16).toString();
+					this.causal=lectura.get("Causal").toString();
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -188,7 +195,7 @@ public class Lectura extends Activity implements DialogoCausalListener,DialogoOb
 				}
 				
 				//Para determinar si esta lectura ya tiene un causal
-				if(causal!=null)
+				if(!causal.equals("null"))
 				{
 					lblCausal.setText("Causal(1)");
 				}else
@@ -210,7 +217,7 @@ public class Lectura extends Activity implements DialogoCausalListener,DialogoOb
 					this.rutaFoto=null;
 				*/
 				try {
-					this.consumoMedio=Integer.parseInt(lectura.get(8));
+					this.consumoMedio=Integer.parseInt(lectura.get("ConsumoMedio"));
 					Log.i("Lectura consumo medio", consumoMedio+"");
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
@@ -218,7 +225,7 @@ public class Lectura extends Activity implements DialogoCausalListener,DialogoOb
 					this.consumoMedio=0;
 				}
 				try {
-					this.lecturaAnterior=Integer.parseInt(lectura.get(7));
+					this.lecturaAnterior=Integer.parseInt(lectura.get("LecturaAnterior"));
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					this.lecturaAnterior=0;
@@ -233,15 +240,15 @@ public class Lectura extends Activity implements DialogoCausalListener,DialogoOb
 				//Obtengo las observaciones
 				try {
 					int cantO=0;
-					if(!lectura.get(13).equals("0")){
+					if(!lectura.get("Observacion1").equals("0")){
 						this.ob1=lectura.get(13);
 						cantO++;
 					}
-					if(!lectura.get(14).equals("0")){
+					if(!lectura.get("Observacion2").equals("0")){
 						this.ob2=lectura.get(14);
 						cantO++;
 					}
-					if(!lectura.get(15).equals("0")){
+					if(!lectura.get("Observacion3").equals("0")){
 						this.ob3=lectura.get(15);
 						cantO++;
 					}

@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Date;
+import java.util.Hashtable;
 import java.util.Vector;
 
 import android.content.Context;
@@ -47,7 +48,7 @@ public class Administrador {
 	 * Constructor de la clase
 	 */
 	private Administrador(Context c) {
-		bd = new BaseDatos(c, "servicios2", null, 9);
+		bd = new BaseDatos(c, "servicios2", null, 10);
 		//Creo las tablas
 		tablas.add("Lecturas");
 		tablas.add("Observaciones");
@@ -204,7 +205,7 @@ public class Administrador {
 			bd.addLecturas(datos[0], Integer.parseInt(datos[1]),
 					Integer.parseInt(datos[2]), Integer.parseInt(datos[3]),
 					datos[4], datos[5], Integer.parseInt(datos[6]),
-					Integer.parseInt(datos[7]), Integer.parseInt(datos[8]));
+					Integer.parseInt(datos[7]), Integer.parseInt(datos[8]),datos[9]);
 		} else if (elemento.equals(tablas.get(1))) {
 			bd.addObservaciones(Integer.parseInt(datos[0]), datos[1]);
 		} else if (elemento.equals(tablas.get(3))) 
@@ -369,7 +370,7 @@ public class Administrador {
 	{
 		return bd.getLecturasByCicloRuta(ciclo, ruta);
 	}
-	public Vector<String> getLecturaMatricula(String matricula)
+	public Hashtable<String, String> getLecturaMatricula(String matricula)
 	{
 		return bd.getLecturaByMatricula(matricula);
 	}
