@@ -26,6 +26,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 @SuppressLint( "NewApi")
@@ -48,8 +49,23 @@ public class MenuAdmin extends Activity implements DialogoArchivosListener,
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.menu_admin);
 		updateBarHandler = new Handler();
+		inicializar();
 	}
-
+	
+	
+	public void inicializar()
+	{
+		if(admin.getRol().equals(getResources().getStringArray(R.array.Roles)[0]))
+		{
+			LinearLayout l2=(LinearLayout)findViewById(R.id.menuAdmin_linL2);
+			LinearLayout l3=(LinearLayout)findViewById(R.id.menuAdmin_linL3);
+			LinearLayout l4=(LinearLayout)findViewById(R.id.menuAdmin_linL4);
+			l2.setVisibility(View.INVISIBLE);
+			l3.setVisibility(View.INVISIBLE);
+			l4.setVisibility(View.INVISIBLE);
+		}
+	
+	}
 	@SuppressLint("NewApi")
 	public void menu(View v) {
 		Log.e("menu", "Ingresando al menu");

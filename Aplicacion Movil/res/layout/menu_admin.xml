@@ -43,6 +43,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/menuAdmin_linL2"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -75,6 +76,7 @@
         android:orientation="horizontal" >
 
         <LinearLayout
+            android:id="@+id/menuAdmin_linL3"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -99,6 +101,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/menuAdmin_linL4"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
