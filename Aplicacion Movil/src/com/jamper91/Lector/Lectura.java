@@ -226,34 +226,19 @@ public class Lectura extends Activity implements DialogoCausalListener,DialogoOb
 				}
 				try {
 					this.causal=lectura.get("Causal").toString();
+					
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 					this.causal=null;
 				}
-				
 				//Para determinar si esta lectura ya tiene un causal
-				if(!causal.equals("null"))
+				if(!causal.equals("null") && !causal.equals("0"))
 				{
 					lblCausal.setText("Causal(1)");
 				}else
 					causal=null;
-				/*
-				if(enru!="")
-					this.enrutamiento=enru;
-				else
-					this.enrutamiento=null;
-				//Es para mostrar la foto del causal
-				try {
-					this.rutaFoto=lectura.get(17);
-				} catch (Exception e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-					this.rutaFoto="";
-				}
-				if(rutaFoto=="")
-					this.rutaFoto=null;
-				*/
+
 				try {
 					this.consumoMedio=Integer.parseInt(lectura.get("ConsumoMedio"));
 					Log.i("Lectura consumo medio", consumoMedio+"");
@@ -278,21 +263,25 @@ public class Lectura extends Activity implements DialogoCausalListener,DialogoOb
 				//Obtengo las observaciones
 				try {
 					int cantO=0;
-					if(!lectura.get("Observacion1").equals("0")){
+					Log.i("Observacion1", lectura.get("Observacion1"));
+					if(!lectura.get("Observacion1").equals("0") && !lectura.get("Observacion1").equals("null")){
 						this.ob1=lectura.get(13);
 						cantO++;
 					}
-					if(!lectura.get("Observacion2").equals("0")){
+					Log.i("Observacion2", lectura.get("Observacion2"));
+					if(!lectura.get("Observacion2").equals("0") && !lectura.get("Observacion2").equals("null")){
 						this.ob2=lectura.get(14);
 						cantO++;
 					}
-					if(!lectura.get("Observacion3").equals("0")){
+					Log.i("Observacion3", lectura.get("Observacion3"));
+					if(!lectura.get("Observacion3").equals("0") && !lectura.get("Observacion3").equals("null")){
 						this.ob3=lectura.get(15);
 						cantO++;
 					}
 					this.lblObservacion.setText("Observacion("+cantO+")");
 				} catch (Exception e) {
 					// TODO: handle exception
+					Log.e("Obteniendo observaciones",e.getMessage());
 				}
 				
 				//Consulto la posicion de esta matricual entre el resto del mismo cilo ruta
