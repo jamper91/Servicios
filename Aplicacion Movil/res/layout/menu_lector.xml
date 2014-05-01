@@ -4,7 +4,14 @@
     android:layout_height="match_parent"
     android:background="@drawable/fondo2"
     android:orientation="vertical" >
-
+	<ImageButton
+	    android:id="@+id/menuLector_btnSalir"
+	    android:layout_width="35dp"
+	    android:layout_height="35dp"
+	    android:layout_gravity="right"
+	    android:onClick="menu"
+	    android:scaleType="centerCrop"
+	    android:src="@drawable/salir" />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

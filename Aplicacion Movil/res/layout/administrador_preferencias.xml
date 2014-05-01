@@ -6,6 +6,15 @@
     android:orientation="vertical"
     android:paddingTop="35dp" >
 
+	<ImageButton
+	    android:id="@+id/administradorPreferencias_btnSalir"
+	    android:layout_width="35dp"
+	    android:layout_height="35dp"
+	    android:layout_gravity="right"
+	    android:onClick="accion"
+	    android:scaleType="centerCrop"
+	    android:src="@drawable/salir" />
+
     <TextView
         android:id="@+id/textView1"
         android:layout_width="match_parent"

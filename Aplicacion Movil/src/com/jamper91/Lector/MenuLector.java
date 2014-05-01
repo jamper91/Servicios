@@ -6,6 +6,7 @@ import java.util.Vector;
 import com.jamper91.Administrador.MenuAdmin;
 import com.jamper91.Lector.DialogoCicloRuta.DialogoCicloRutaListener;
 import com.jamper91.base.Administrador;
+import com.jamper91.servicios.Inicio;
 import com.jamper91.servicios.R;
 
 import android.annotation.SuppressLint;
@@ -40,6 +41,10 @@ public class MenuLector extends Activity implements DialogoCicloRutaListener {
 			break;
 		case R.id.imgEncuestas:
 				dialogo("Esta funcion aun no ha sido implementada", "Sin implementar");
+			break;
+		case R.id.menuLector_btnSalir:
+			Intent i = new Intent(this, Inicio.class);
+			startActivity(i);
 			break;
 		default:
 			break;

@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.Vector;
 
 import com.jamper91.Administrador.DialogoArchivos.DialogoArchivosListener;
+import com.jamper91.Lector.MenuLector;
 import com.jamper91.Lector.Reporte;
 import com.jamper91.base.Administrador;
 import com.jamper91.base.DialogoConfirmar;
 import com.jamper91.base.DialogoConfirmar.DialogoConfirmarListener;
+import com.jamper91.servicios.Inicio;
 import com.jamper91.servicios.R;
 
 import android.annotation.SuppressLint;
@@ -84,6 +86,10 @@ public class MenuAdmin extends Activity implements DialogoArchivosListener,
 		case R.id.imgOpcion4:
 			Intent intent1=new Intent(this, Reporte.class);
 			startActivity(intent1);
+			break;
+		case R.id.menuAdmin_btnSalir:
+			Intent i = new Intent(this, Inicio.class);
+			startActivity(i);
 			break;
 		}
 	}

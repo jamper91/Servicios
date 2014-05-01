@@ -64,7 +64,7 @@
                     android:layout_marginLeft="10dp"
                     android:layout_weight="1"
                     android:gravity="left|center_vertical"
-                    android:text="Matricula"
+                    android:text="Matrícula"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="#FFFFFF" />
 
@@ -144,7 +144,7 @@
                     android:layout_marginLeft="10dp"
                     android:layout_weight="1"
                     android:gravity="left|center_vertical"
-                    android:text="Numero Contador"
+                    android:text="Número Contador"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="#FFFFFF" />
 
@@ -342,7 +342,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Observacion(0)"
+                android:text="Observación(0)"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="#FFFFFF" />
 
