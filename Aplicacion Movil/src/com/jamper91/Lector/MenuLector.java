@@ -39,8 +39,8 @@ public class MenuLector extends Activity implements DialogoCicloRutaListener {
 				dia.show(getFragmentManager(), "DialogoCicloRutaListener");
 			break;
 		case R.id.imgEncuestas:
-				Intent intent=new Intent(this, Reporte.class);
-				startActivity(intent);
+//				Intent intent=new Intent(this, Reporte.class);
+//				startActivity(intent);
 			break;
 		default:
 			break;

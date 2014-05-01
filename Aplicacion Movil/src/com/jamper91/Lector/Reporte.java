@@ -30,35 +30,40 @@ public class Reporte extends Activity
 		TableLayout datos=(TableLayout)findViewById(R.id.Reporte_tblReporte);
 		//Obtengo todos los planesLectura del  usuario logeado
 		Vector<String[]> planes=admin.getPlanLecturasByLogin(admin.getLogin());
-		Log.i("inicializar", planes.toString());
-		for (String[] plan : planes) 
+		if(planes!=null)
 		{
-			//Obtengo el ciclo y ruta y consulto lo necesario
-			String ciclo=plan[0];
-			String ruta=plan[1];
-			String inf[]=admin.getInformacionRuta(ciclo,ruta);
-			TableRow row= new TableRow(this);
-	        TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
-	        row.setLayoutParams(lp);
-	        TextView txtCiclo = new TextView(this);
-	        TextView txtRuta = new TextView(this);
-	        TextView txtCantidad = new TextView(this);
-	        TextView txtTomadas = new TextView(this);
-	        TextView txtPendientes = new TextView(this);
-	        txtCiclo.setText(ciclo+"");
-	        txtRuta.setText(ruta+"");
-	        txtCantidad.setText(inf[0]);
-	        txtTomadas.setText(inf[1]);
-	        txtPendientes.setText(inf[2]);
-	        
-	        row.addView(txtCiclo);
-	        row.addView(txtRuta);
-	        row.addView(txtCantidad);
-	        row.addView(txtTomadas);
-	        row.addView(txtPendientes);
-	        datos.addView(row);
-			
+			Log.i("inicializar", planes.toString());
+			for (String[] plan : planes) 
+			{
+				//Obtengo el ciclo y ruta y consulto lo necesario
+				String ciclo=plan[0];
+				String ruta=plan[1];
+				String inf[]=admin.getInformacionRuta(ciclo,ruta);
+				TableRow row= new TableRow(this);
+		        TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
+		        row.setLayoutParams(lp);
+		        TextView txtCiclo = new TextView(this);
+		        TextView txtRuta = new TextView(this);
+		        TextView txtCantidad = new TextView(this);
+		        TextView txtTomadas = new TextView(this);
+		        TextView txtPendientes = new TextView(this);
+		        txtCiclo.setText(ciclo+"");
+		        txtRuta.setText(ruta+"");
+		        txtCantidad.setText(inf[0]);
+		        txtTomadas.setText(inf[1]);
+		        txtPendientes.setText(inf[2]);
+		        
+		        row.addView(txtCiclo);
+		        row.addView(txtRuta);
+		        row.addView(txtCantidad);
+		        row.addView(txtTomadas);
+		        row.addView(txtPendientes);
+		        datos.addView(row);
+				
+			}
+		
 		}
+		
 	}
 	
 

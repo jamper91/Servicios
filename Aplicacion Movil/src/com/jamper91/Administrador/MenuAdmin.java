@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Vector;
 
 import com.jamper91.Administrador.DialogoArchivos.DialogoArchivosListener;
+import com.jamper91.Lector.Reporte;
 import com.jamper91.base.Administrador;
 import com.jamper91.base.DialogoConfirmar;
 import com.jamper91.base.DialogoConfirmar.DialogoConfirmarListener;
@@ -81,6 +82,8 @@ public class MenuAdmin extends Activity implements DialogoArchivosListener,
 			startActivity(intent);
 			break;
 		case R.id.imgOpcion4:
+			Intent intent1=new Intent(this, Reporte.class);
+			startActivity(intent1);
 			break;
 		}
 	}
