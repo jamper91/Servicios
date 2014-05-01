@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Reenrutamiento"
+            android:text="Re-enrutamiento"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
     </LinearLayout>
@@ -37,7 +37,7 @@
             android:layout_weight="1"
             android:background="@drawable/fondo_text_box"
             android:ems="10"
-            android:hint="Ciclo"
+            android:hint="Nuevo Ciclo"
             android:inputType="number"
             android:paddingLeft="20dp" >
             <requestFocus />
@@ -60,7 +60,7 @@
             android:layout_weight="1"
             android:background="@drawable/fondo_text_box"
             android:ems="10"
-            android:hint="Ruta"
+            android:hint="Nueva Ruta"
             android:inputType="number"
             android:paddingLeft="20dp" >
 
@@ -83,7 +83,7 @@
             android:layout_weight="1"
             android:background="@drawable/fondo_text_box"
             android:ems="10"
-            android:hint="Consecutivo"
+            android:hint="Nuevo Consecutivo"
             android:inputType="number"
             android:paddingLeft="20dp" >
 

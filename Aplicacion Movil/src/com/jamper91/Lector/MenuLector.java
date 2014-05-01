@@ -39,8 +39,7 @@ public class MenuLector extends Activity implements DialogoCicloRutaListener {
 				dia.show(getFragmentManager(), "DialogoCicloRutaListener");
 			break;
 		case R.id.imgEncuestas:
-//				Intent intent=new Intent(this, Reporte.class);
-//				startActivity(intent);
+				dialogo("Esta funcion aun no ha sido implementada", "Sin implementar");
 			break;
 		default:
 			break;
@@ -74,7 +73,7 @@ public class MenuLector extends Activity implements DialogoCicloRutaListener {
 			}
 		}catch(Exception e)
 		{
-			dialogo("Los datos que intenta cargar para lecturas no están asignados al usuario, verifique el plan de lecturas con el administrador","Error L-ML-oDAC");
+			dialogo("Los datos que intenta cargar para lecturas no están asignados al usuario, verifique el plan de lecturas con el administrador","Error");
 		}
 		
 		
@@ -101,5 +100,6 @@ public class MenuLector extends Activity implements DialogoCicloRutaListener {
 		else
 			return false;
 	}
+	
 
 }

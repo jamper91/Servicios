@@ -109,7 +109,7 @@
                 android:id="@+id/textView4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Generar Rutas"
+                android:text="Informes"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="#FFFFFF" />
 

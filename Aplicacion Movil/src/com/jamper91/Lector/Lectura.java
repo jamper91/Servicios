@@ -51,7 +51,7 @@ public class Lectura extends Activity implements DialogoCausalListener,DialogoOb
 	 * Elementos de la interfaz grafica
 	 */
 	EditText txtLectura;
-	TextView txtCantidad, txtMatricula, txtEnrutamiento, txtDireccion,lblCausal,txtnumContador,txttipoContador,lblObservacion,txtUsuario;
+	TextView txtCantidad, txtMatricula, txtEnrutamiento, txtDireccion,lblCausal,txtnumContador,txttipoContador,lblObservacion,txtUsuario,txtNombreUsuario;
 	ImageButton btnRegistrar, btnAnterior, btnSiguiente,btnSalir,btnReenrutar;
 	ImageView btnCausal, btnObservacion;
 
@@ -137,6 +137,7 @@ public class Lectura extends Activity implements DialogoCausalListener,DialogoOb
 		btnSalir=(ImageButton)findViewById(R.id.Lectura_btnSalir);
 		btnReenrutar=(ImageButton)findViewById(R.id.Lectura_btnReenrutar);
 		txtUsuario=(TextView)findViewById(R.id.Lectura_txtUsuario);
+		txtNombreUsuario=(TextView)findViewById(R.id.Lectura_txtNombreUsuario);
 	}
 
 	// Esta funcion se encarga de consultar en la base de datos la informacion
@@ -150,7 +151,8 @@ public class Lectura extends Activity implements DialogoCausalListener,DialogoOb
 			
 				//Actualizo la para que el usuario la vea
 				try{
-					txtUsuario.setText(txtUsuario.getText()+" "+lectura.get("Nombre"));
+					//txtUsuario.setText(txtUsuario.getText()+" "+lectura.get("Nombre"));
+					txtNombreUsuario.setText(lectura.get("Nombre"));
 				}catch(Exception e){
 					
 				}
