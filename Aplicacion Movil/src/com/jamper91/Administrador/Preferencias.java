@@ -25,6 +25,11 @@ public class Preferencias extends Activity {
 	private void inicializar()
 	{
 		txtValidar=(TextView)findViewById(R.id.administradorPreferencias_txtValidar);
+		String p=admin.getParametroByNombre("validar");
+		if(p!=null)
+		{
+			txtValidar.setText(p);
+		}
 	}
 	
 	public void ejecutar(View v)

@@ -387,7 +387,7 @@ public class BaseDatos extends SQLiteOpenHelper {
 		Cursor c = db.rawQuery("SELECT * FROM Lecturas;", null);
 		while (c.moveToNext()) {
 			usuarios.add(c.getString(0) + "," + c.getInt(1) + "," + c.getInt(2)
-					+ "," + c.getInt(3) + "," + c.getString(4) + ","
+					+ "," + c.getString(4) + ","
 					+ c.getString(5) + "," + c.getInt(6) + "," + c.getInt(7)
 					+ "," + c.getInt(8) + "," + c.getInt(9) + ","
 					+ c.getInt(10) + "," + c.getInt(11) + "," + c.getInt(12)
@@ -395,7 +395,7 @@ public class BaseDatos extends SQLiteOpenHelper {
 					+ c.getInt(15) + "," + c.getInt(16) + "," + c.getInt(17)
 					+ "," + c.getInt(18) + "," + c.getInt(19) + ","
 					+ c.getInt(20) + "," + c.getInt(21) + "," + c.getInt(22)
-					+ "," + c.getInt(23) + "," + c.getInt(24) + c.getShort(25)+";");
+					+ "," + c.getInt(23) + "," + c.getInt(24) +","+ c.getString(25)+";");
 		}
 		db.close();
 		return usuarios;
@@ -576,20 +576,20 @@ public class BaseDatos extends SQLiteOpenHelper {
 		try {
 
 			SQLiteDatabase db = getReadableDatabase();
-//			String sql="select count(Matricula) as cantidad from Lecturas " +
-//					"where " +
-//					"(Ciclo=$1 and Ruta=$2 and NuevoCiclo=null and NuevaRuta=null) " +
-//					"or " +
-//					"(NuevoCiclo=$1 and NuevaRuta=$2)";
-//			sql=sql.replace("$1", ciclo+"");
-//			sql=sql.replace("$2", ruta+"");
-//			sql=sql.replace("$1", ciclo+"");
-//			sql=sql.replace("$2", ruta+"");
-//			Log.i("sql", sql);
-//			Cursor c=db.rawQuery(sql, null);
-			Cursor c = db.rawQuery(
-					"select count(Matricula) as cantidad from Lecturas where Ciclo="
-							+ ciclo + " and Ruta=" + ruta, null);
+			String sql="select count(Matricula) as cantidad from Lecturas " +
+					"where " +
+					"(Ciclo=$1 and Ruta=$2 and NuevoCiclo=null and NuevaRuta=null) " +
+					"or " +
+					"(NuevoCiclo=$1 and NuevaRuta=$2)";
+			sql=sql.replace("$1", ciclo+"");
+			sql=sql.replace("$2", ruta+"");
+			sql=sql.replace("$1", ciclo+"");
+			sql=sql.replace("$2", ruta+"");
+			Log.i("sql", sql);
+			Cursor c=db.rawQuery(sql, null);
+//			Cursor c = db.rawQuery(
+//					"select count(Matricula) as cantidad from Lecturas where Ciclo="
+//							+ ciclo + " and Ruta=" + ruta, null);
 			
 			if (c != null) {
 				c.moveToFirst();

@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
-        android:text="Validar"
+        android:text="Parametro: Validar"
         android:textAlignment="center"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="#fff" />
@@ -23,7 +23,9 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
+        android:background="@drawable/textbox"
         android:ems="10"
+        android:gravity="center"
         android:inputType="numberSigned" >
 
         <requestFocus />
@@ -34,8 +36,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="Aceptar"
+        android:background="@drawable/button_aqua_movil"
         android:onClick="ejecutar"
-         />
+        android:text="Aceptar"
+        android:textColor="#0066CC" />
 
 </LinearLayout>
