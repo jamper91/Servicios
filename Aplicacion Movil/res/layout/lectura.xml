@@ -381,7 +381,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:onClick="accion"
-            android:src="@android:drawable/btn_star" />
+            android:src="@drawable/reenrutar" />
 
         <ImageButton
             android:id="@+id/Lectura_btnSiguiente"
