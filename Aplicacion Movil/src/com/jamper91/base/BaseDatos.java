@@ -387,7 +387,7 @@ public class BaseDatos extends SQLiteOpenHelper {
 		Cursor c = db.rawQuery("SELECT * FROM Lecturas;", null);
 		while (c.moveToNext()) {
 			usuarios.add(c.getString(0) + "," + c.getInt(1) + "," + c.getInt(2)
-					+ "," + c.getString(4) + ","
+					+ "," + c.getString(3) + "," + c.getString(4) + ","
 					+ c.getString(5) + "," + c.getInt(6) + "," + c.getInt(7)
 					+ "," + c.getInt(8) + "," + c.getInt(9) + ","
 					+ c.getInt(10) + "," + c.getInt(11) + "," + c.getInt(12)
@@ -395,7 +395,7 @@ public class BaseDatos extends SQLiteOpenHelper {
 					+ c.getInt(15) + "," + c.getInt(16) + "," + c.getInt(17)
 					+ "," + c.getInt(18) + "," + c.getInt(19) + ","
 					+ c.getInt(20) + "," + c.getInt(21) + "," + c.getInt(22)
-					+ "," + c.getInt(23) + "," + c.getInt(24) +","+ c.getString(25)+";");
+					+ "," + c.getInt(23) + "," + c.getString(25)+";");
 		}
 		db.close();
 		return usuarios;
@@ -576,11 +576,30 @@ public class BaseDatos extends SQLiteOpenHelper {
 		try {
 
 			SQLiteDatabase db = getReadableDatabase();
-			String sql="select count(Matricula) as cantidad from Lecturas " +
-					"where " +
-					"(Ciclo=$1 and Ruta=$2 and NuevoCiclo=null and NuevaRuta=null) " +
-					"or " +
-					"(NuevoCiclo=$1 and NuevaRuta=$2)";
+//			String sql="select count(Matricula) as cantidad from Lecturas " +
+//					"where " +
+//					"(Ciclo=$1 and Ruta=$2 and NuevoCiclo=null and NuevaRuta=null or NuevoCiclo=0 or NuevaRuta=0) " +
+//					"or " +
+//					"(NuevoCiclo=$1 and NuevaRuta=$2)";
+			String sql="select count(Matricula) from ( " +
+					"	select " +
+					"		matricula, ciclo, ruta, consecutivo" +
+					"	from" +
+					"		lecturas" +
+					"	where" +
+					"		ciclo=$1 and" +
+					"		ruta=$2 and" +
+					"		nuevoCiclo is null and" +
+					"		nuevaRuta is null" +
+					"	UNION" +
+					"	SELECT " +
+					"		matricula, nuevoCiclo as ciclo, nuevaRuta as ruta, nuevoConsecutivo as consecutivo" +
+					"	from " +
+					"		lecturas" +
+					"	where" +
+					"		nuevoCiclo=$1 and" +
+					"		nuevaRuta=$2" +
+					"	)";
 			sql=sql.replace("$1", ciclo+"");
 			sql=sql.replace("$2", ruta+"");
 			sql=sql.replace("$1", ciclo+"");
@@ -695,10 +714,35 @@ public class BaseDatos extends SQLiteOpenHelper {
 			// Cursor c =
 			// db.rawQuery("(select matricula from lecturas where nuevoCiclo is null order by id limit 2) UNION select matricula from lecturas where id<(select id from lecturas where nuevoCiclo is null order by id  limit 1)",
 			// null);
+//			Cursor c = db.rawQuery(
+//					"select matricula from lecturas where nuevoCiclo is null and ciclo="
+//							+ ciclo + " and ruta=" + ruta
+//							+ " order by id limit 1", null);
 			Cursor c = db.rawQuery(
-					"select matricula from lecturas where nuevoCiclo is null and ciclo="
-							+ ciclo + " and ruta=" + ruta
-							+ " order by id limit 1", null);
+					"select " +
+					"	matricula, id " +
+					"from " +
+					"	lecturas " +
+					"where " +
+					"	 nuevaLectura is null and " +
+					"	 nuevoCiclo is null and " +
+					"	 nuevaRuta is null and " +
+					"	 ciclo="+ ciclo + " and " +
+					"	 ruta=" + ruta+
+					" UNION " +
+					"select " +
+					"	matricula, id " +
+					"from " +
+					"	lecturas " +
+					"where " +
+					"	 nuevaLectura is null and " +
+					"	 nuevoCiclo="+ ciclo + " and " +
+					"	 nuevaRuta=" + ruta+
+					" order by " +
+					"	id " +
+					"limit " +
+					"	1", null);
+
 			if (c != null) {
 				while (c.moveToNext()) {
 					retornar = c.getString(0);
@@ -726,10 +770,36 @@ public class BaseDatos extends SQLiteOpenHelper {
 			// Cursor c =
 			// db.rawQuery("(select matricula from lecturas where nuevoCiclo is null order by id limit 2) UNION select matricula from lecturas where id<(select id from lecturas where nuevoCiclo is null order by id  limit 1)",
 			// null);
+//			Cursor c = db.rawQuery(
+//					"select matricula from lecturas where ciclo=" + ciclo
+//							+ " and ruta=" + ruta + " and id<" + id
+//							+ " order by id DESC limit 1", null);
+			
 			Cursor c = db.rawQuery(
-					"select matricula from lecturas where ciclo=" + ciclo
-							+ " and ruta=" + ruta + " and id<" + id
-							+ " order by id DESC limit 1", null);
+					"select " +
+					"	matricula, id " +
+					"from " +
+					"	lecturas " +
+					"where " +
+					"	 nuevaRuta is null and " +
+					"	 nuevoCiclo is null and " +
+					"	 nuevaRuta is null and " +
+					"	 ciclo="+ ciclo + " and " +
+					"	 ruta=" + ruta+ " and "+
+					"	id<"+id+" "+
+					" UNION " +
+					"select " +
+					"	matricula, id " +
+					"from " +
+					"	lecturas " +
+					"where " +
+					"	 nuevoCiclo="+ ciclo + " and " +
+					"	 nuevaRuta=" + ruta + " and " +
+					"	 id<"+id+" "+
+					" order by " +
+					"	id DESC " +
+					"limit " +
+					"	1", null);
 			if (c != null) {
 				while (c.moveToNext()) {
 					retornar = c.getString(0);

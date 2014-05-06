@@ -78,6 +78,7 @@
                     android:layout_weight="1"
                     android:background="@drawable/textbox"
                     android:ems="10"
+                    android:padding="15dp"
                     android:textColor="#ffffff" />
 
             </LinearLayout>
@@ -109,6 +110,7 @@
                     android:layout_marginRight="5dp"
                     android:layout_weight="1"
                     android:background="@drawable/textbox"
+                    android:padding="15dp"
                     android:textColor="#ffffff" />
 
             </LinearLayout>
@@ -158,7 +160,9 @@
                     android:layout_weight="1"
                     android:background="@drawable/textbox"
                     android:ems="10"
+                    android:paddingLeft="15dp"
                     android:textColor="#ffffff" />
+
             </LinearLayout>
 
             <LinearLayout
@@ -188,7 +192,9 @@
                     android:layout_marginRight="5dp"
                     android:layout_weight="1"
                     android:background="@drawable/textbox"
+                    android:paddingLeft="15dp"
                     android:textColor="#ffffff" />
+
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
@@ -224,6 +230,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/textbox"
                 android:ems="10"
+                android:paddingLeft="15dp"
                 android:textColor="#ffffff" />
 
         </LinearLayout>
@@ -244,6 +251,25 @@
             android:orientation="vertical" >
 
             <TextView
+                android:id="@+id/Lectura_txtUsuario"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1"
+                android:text="Usuario"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="#FFFFFF" />
+
+            <TextView
+                android:id="@+id/Lectura_txtNombreUsuario"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/textbox"
+                android:paddingLeft="15dp"
+                android:textColor="#ffffff" />
+
+            <TextView
                 android:id="@+id/textView4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -255,35 +281,14 @@
                 android:textColor="#FFFFFF" />
 
             <EditText
-                android:id="@+id/Lectura_txtLectura"
+                android:id="@+id/Lectura_txtLectura2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@drawable/textbox"
                 android:inputType="number"
+                android:paddingLeft="15dp"
                 android:textColor="#ffffff" />
-
-            <TextView
-                android:id="@+id/Lectura_txtUsuario"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_weight="1"
-                android:text="Usuario"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="#FFFFFF" />
-
-            <EditText
-                android:id="@+id/Lectura_txtNombreUsuario"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:textColor="#ffffff" >
-
-                <requestFocus />
-            </EditText>
-
         </LinearLayout>
 
     </LinearLayout>

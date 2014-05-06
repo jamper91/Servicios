@@ -131,7 +131,7 @@ public class Lectura extends Activity implements DialogoCausalListener,
 		txtMatricula = (TextView) findViewById(R.id.Lectura_txtMatricula);
 		txtEnrutamiento = (TextView) findViewById(R.id.Lectura_txtEnrutamiento);
 		txtDireccion = (TextView) findViewById(R.id.Lectura_txtDireccion);
-		txtLectura = (EditText) findViewById(R.id.Lectura_txtLectura);
+		txtLectura = (EditText) findViewById(R.id.Lectura_txtLectura2);
 		btnCausal = (ImageView) findViewById(R.id.Lectura_btnCausal);
 		btnObservacion = (ImageView) findViewById(R.id.Lectura_btnObservacion);
 		txtCantidad = (TextView) findViewById(R.id.Lecturas_txtCantidad);
@@ -308,7 +308,7 @@ public class Lectura extends Activity implements DialogoCausalListener,
 				try {
 					posicion = admin.getPosicionUltimaLecturaEditada(
 							String.valueOf(this.id), this.ciclo, this.ruta);
-					posicion = Integer.parseInt(posicion) + 1 + "";
+					posicion = Integer.parseInt(posicion)  + "";
 					this.txtCantidad.setText(posicion + "/" + cantidad);
 				} catch (Exception e) {
 					// TODO: handle exception
