@@ -32,7 +32,7 @@ public class BaseDatos extends SQLiteOpenHelper {
 		Log.e("onCreate", "Creandose por primera vez");
 		String sql = "CREATE TABLE Causales (   CodigoCausal integer NOT NULL,   Descripcion text );";
 		arg0.execSQL(sql);
-		sql = "CREATE TABLE Lecturas (Matricula text NOT NULL,   Ciclo text,   Ruta text,   Consecutivo integer,   Direccion text,   NumMedidor text, TipoMedidor integer,   LecturaAnterior integer,   ConsumoMedio integer,   NuevoCiclo integer,   NuevaRuta integer,   NuevoConsecutivo integer,   NuevaLectura integer,   Observacion1 integer,   Observacion2 integer,   Observacion3 integer,   Causal integer,   Foto text,   FechaHora text,   Latitud text,   Longitud text,   Altitud text,   Intentos integer,   Login text,   id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, Nombre text  ) ";
+		sql = "CREATE TABLE Lecturas (Matricula text NOT NULL,   Ciclo text,   Ruta text,   Consecutivo integer,   Direccion text,   NumMedidor text, TipoMedidor integer,   LecturaAnterior integer,   ConsumoMedio integer,   NuevoCiclo integer,   NuevaRuta integer,   NuevoConsecutivo integer,   NuevaLectura integer,   Observacion1 integer,   Observacion2 integer,   Observacion3 integer,   Causal integer,   Foto text,   FechaHora text,   Latitud text,   Longitud text,   Altitud text,   Intentos integer,   Login text,   id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, Nombre text, ociclo integer, oruta integer, oconsecutivo integer  ) ";
 		arg0.execSQL(sql);
 		sql = "CREATE TABLE Observaciones (   CodigoObservacion integer NOT NULL,   Descripcion text ) ";
 		arg0.execSQL(sql);
@@ -73,7 +73,7 @@ public class BaseDatos extends SQLiteOpenHelper {
 
 		sql = "CREATE TABLE Causales (   CodigoCausal integer NOT NULL,   Descripcion text );";
 		arg0.execSQL(sql);
-		sql = "CREATE TABLE Lecturas (   Matricula text NOT NULL,   Ciclo text,   Ruta text,   Consecutivo integer,   Direccion text,   NumMedidor text, TipoMedidor integer,  LecturaAnterior integer,   ConsumoMedio integer,   NuevoCiclo integer,   NuevaRuta integer,   NuevoConsecutivo integer,   NuevaLectura integer,   Observacion1 integer,   Observacion2 integer,   Observacion3 integer,   Causal integer,   Foto text,   FechaHora text,   Latitud text,   Longitud text,   Altitud text,   Intentos integer,   Login text,   id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, Nombre text) ";
+		sql = "CREATE TABLE Lecturas (   Matricula text NOT NULL,   Ciclo text,   Ruta text,   Consecutivo integer,   Direccion text,   NumMedidor text, TipoMedidor integer,  LecturaAnterior integer,   ConsumoMedio integer,   NuevoCiclo integer,   NuevaRuta integer,   NuevoConsecutivo integer,   NuevaLectura integer,   Observacion1 integer,   Observacion2 integer,   Observacion3 integer,   Causal integer,   Foto text,   FechaHora text,   Latitud text,   Longitud text,   Altitud text,   Intentos integer,   Login text,   id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, Nombre text, ociclo integer, oruta integer, oconsecutivo integer) ";
 		arg0.execSQL(sql);
 		sql = "CREATE TABLE Observaciones (   CodigoObservacion integer NOT NULL,   Descripcion text ) ";
 		arg0.execSQL(sql);
@@ -183,31 +183,65 @@ public class BaseDatos extends SQLiteOpenHelper {
 	 */
 	public void addLecturas(String matricula, int ciclo, int ruta,
 			int consecutivo, String direccion, String numeroMedidor,
-			int tipoMedidor, int lecturaAnterior, int consumoMedio,String nombre) {
-		Log.i("nombre", nombre+"");
-		SQLiteDatabase db = getWritableDatabase();
-		db.execSQL("insert into Lecturas (Matricula,Ciclo, Ruta, Consecutivo, Direccion, NumMedidor, TipoMedidor, LecturaAnterior, ConsumoMedio, Nombre) VALUES('"
-				+ matricula
-				+ "',"
-				+ ciclo
-				+ ","
-				+ ruta
-				+ ","
-				+ consecutivo
-				+ ",'"
-				+ direccion
-				+ "','"
-				+ numeroMedidor
-				+ "',"
-				+ tipoMedidor
-				+ "," 
-				+ lecturaAnterior 
-				+ "," 
-				+ consumoMedio
-				+ ",'"
-				+ nombre
-				+ "');");
-		db.close();
+			int tipoMedidor, int lecturaAnterior, int consumoMedio, String nombre) {
+		try{
+			SQLiteDatabase db = getWritableDatabase();
+			String sql="" +
+					"insert into " +
+					"Lecturas " +
+					"	(Matricula," +
+					"	Ciclo, " +
+					"	Ruta, " +
+					"	Consecutivo, " +
+					"	Direccion, " +
+					"	NumMedidor, " +
+					"	TipoMedidor, " +
+					"	LecturaAnterior, " +
+					"	ConsumoMedio, " +
+					"	Nombre, " +
+					"	ociclo, " +
+					"	oruta, " +
+					"	oconsecutivo" +
+					") " +
+					"VALUES(" +
+					"	'$matricula'," +
+					"	$ciclo," +
+					"	$ruta," +
+					"	$consecutivo," +
+					"	'$direccion'," +
+					"	'$numeroMedidor'," +
+					"	$tipoMedidor," +
+					"	$lecturaAnterior," +
+					"	$consumoMedio," +
+					"	'$nombre'," +
+					"	$ociclo," +
+					"	$oruta," +
+					"	$oconsecutivo" +
+					");";
+			sql=sql.replace("$matricula", matricula);
+			sql=sql.replace("$ciclo", ciclo+"");
+			sql=sql.replace("$ruta", ruta+"");
+			sql=sql.replace("$consecutivo", consecutivo+"");
+			sql=sql.replace("$direccion", direccion+"");
+			sql=sql.replace("$numeroMedidor", numeroMedidor+"");
+			sql=sql.replace("$tipoMedidor", tipoMedidor+"");
+			sql=sql.replace("$lecturaAnterior", lecturaAnterior+"");
+			sql=sql.replace("$consumoMedio", consumoMedio+"");
+			sql=sql.replace("$nombre", nombre+"");
+			sql=sql.replace("$ociclo", ciclo+"");
+			sql=sql.replace("$oruta", ruta+"");
+			sql=sql.replace("$oconsecutivo", consecutivo+"");
+
+			Log.i("Sql", sql);
+			db.execSQL(sql);
+			
+			db.close();
+		}catch(Exception e)
+		{
+			Log.i("Error", e.getMessage());
+			Log.i("Error", e.toString());
+		}
+		
 
 	}
 
@@ -241,17 +275,31 @@ public class BaseDatos extends SQLiteOpenHelper {
 		Log.i("updateLectura", "matricula: " + matricula);
 		try {
 			SQLiteDatabase db = getWritableDatabase();
-			String sql = "UPDATE Lecturas SET " + "NuevoCiclo=" + nuevoCiclo
-					+ ", " + "NuevaRuta=" + nuevaRuta + ", "
-					+ "NuevoConsecutivo=" + nuevoConsecutivo + ","
-					+ "NuevaLectura=" + nuevaLectura + "," + "Observacion1="
-					+ ob1 + "," + "Observacion2=" + ob2 + "," + "Observacion3="
-					+ ob3 + "," + "Causal=" + causal + "," + "Foto='" + foto
-					+ "'," + "FechaHora='" + fecha.toString() + "',"
-					+ "Latitud='" + latitud + "'," + "Longitud='" + longitud + "',"
-					+ "Altitud='" + altitud + "'," + "Intentos=" + inten + ","
-					+ "Login='" + login + "' " + "where " + "Matricula='"
-					+ matricula + "'";
+			String sql = "UPDATE " +
+					"Lecturas SET " +
+					"	NuevoCiclo=" + nuevoCiclo
+					+ ", " + "NuevaRuta=" + nuevaRuta 
+					+ ", " + "NuevoConsecutivo=" + nuevoConsecutivo 
+					+ "," + "NuevaLectura=" + nuevaLectura 
+					+ "," + "Observacion1=" + ob1 
+					+ "," + "Observacion2=" + ob2 
+					+ "," + "Observacion3=" + ob3 
+					+ "," + "Causal=" + causal 
+					+ "," + "Foto='" + foto
+					+ "'," + "FechaHora='" + fecha.toString() 
+					+ "'," + "Latitud='" + latitud 
+					+ "'," + "Longitud='" + longitud 
+					+ "'," + "Altitud='" + altitud 
+					+ "'," + "Intentos=" + inten;
+					if(nuevoCiclo>0)
+						sql+= "," + "ociclo="+ nuevoCiclo;
+					if(nuevaRuta>0)
+						sql+= "," + "oruta="+ nuevaRuta;
+					if(nuevoConsecutivo>0)
+						sql+= "," + "oconsecutivo="+ nuevoConsecutivo;
+					sql+= "," + "Login='" + login + "' " 
+					+ "where " 
+					+ "Matricula='"+ matricula + "'";
 			Log.i("updateLectura", "sql: " + sql);
 			db.execSQL(sql);
 			db.close();
@@ -342,7 +390,7 @@ public class BaseDatos extends SQLiteOpenHelper {
 	public Vector<String> getPlanLecturasByCicloRuta(String ciclo, String ruta) {
 		Vector<String> planes = new Vector<String>();
 		SQLiteDatabase db = getReadableDatabase();
-		Cursor c = db.rawQuery("SELECT * FROM PlanLecturas where Ciclo="+ciclo+" and Ruta="+ruta+";", null);
+		Cursor c = db.rawQuery("SELECT * FROM PlanLecturas where ciclo="+ciclo+" and ruta="+ruta+";", null);
 		while (c.moveToNext()) {
 			planes.add(c.getString(0));
 			planes.add(c.getString(1));
@@ -576,39 +624,17 @@ public class BaseDatos extends SQLiteOpenHelper {
 		try {
 
 			SQLiteDatabase db = getReadableDatabase();
-//			String sql="select count(Matricula) as cantidad from Lecturas " +
-//					"where " +
-//					"(Ciclo=$1 and Ruta=$2 and NuevoCiclo=null and NuevaRuta=null or NuevoCiclo=0 or NuevaRuta=0) " +
-//					"or " +
-//					"(NuevoCiclo=$1 and NuevaRuta=$2)";
-			String sql="select count(Matricula) from ( " +
-					"	select " +
-					"		matricula, ciclo, ruta, consecutivo" +
-					"	from" +
-					"		lecturas" +
-					"	where" +
-					"		ciclo=$1 and" +
-					"		ruta=$2 and" +
-					"		nuevoCiclo is null and" +
-					"		nuevaRuta is null" +
-					"	UNION" +
-					"	SELECT " +
-					"		matricula, nuevoCiclo as ciclo, nuevaRuta as ruta, nuevoConsecutivo as consecutivo" +
-					"	from " +
-					"		lecturas" +
-					"	where" +
-					"		nuevoCiclo=$1 and" +
-					"		nuevaRuta=$2" +
-					"	)";
-			sql=sql.replace("$1", ciclo+"");
-			sql=sql.replace("$2", ruta+"");
+			String sql="select count(Matricula) " +
+					" from " +
+					"	Lecturas "+
+					"where "+
+					" ociclo=$1 and"+
+					" oruta=$2"+
+					"";
 			sql=sql.replace("$1", ciclo+"");
 			sql=sql.replace("$2", ruta+"");
 			Log.i("sql", sql);
 			Cursor c=db.rawQuery(sql, null);
-//			Cursor c = db.rawQuery(
-//					"select count(Matricula) as cantidad from Lecturas where Ciclo="
-//							+ ciclo + " and Ruta=" + ruta, null);
 			
 			if (c != null) {
 				c.moveToFirst();
@@ -670,19 +696,30 @@ public class BaseDatos extends SQLiteOpenHelper {
 
 	}
 
-	public String getPosicionUltimaLecturaEditada(String id,int ciclo, int ruta)
+	public String getPosicionUltimaLecturaEditada(String id,int ciclo, int ruta,int consecutivo)
 	{
+		Log.i("Consecutivo", consecutivo+"");
 		String retornar = "";
+		int pos=0;
 		try {
 
 			SQLiteDatabase db = getReadableDatabase();
-			// Cursor c =
-			// db.rawQuery("(select matricula from lecturas where nuevoCiclo is null order by id limit 2) UNION select matricula from lecturas where id<(select id from lecturas where nuevoCiclo is null order by id  limit 1)",
-			// null);
-			Cursor c = db.rawQuery(
-					"select count(matricula) from lecturas where ciclo="
-							+ ciclo + " and ruta=" + ruta
-							+ " and id<"+id+" order by id limit 1", null);
+			String sql="" +
+					"select " +
+					"	count(matricula) " +
+					"from " +
+					"	lecturas " +
+					"where " +
+					"	ociclo=$1 and " +
+					"	oruta=$2 and " +
+					"	oconsecutivo<$3 " +
+					"order by " +
+					"	consecutivo";
+			sql=sql.replace("$1", ciclo+"");
+			sql=sql.replace("$2", ruta+"");
+			sql=sql.replace("$3", consecutivo+"");
+			
+			Cursor c=db.rawQuery(sql, null);
 			if (c != null) {
 				while (c.moveToNext()) {
 					retornar = c.getString(0);
@@ -690,9 +727,9 @@ public class BaseDatos extends SQLiteOpenHelper {
 
 			}
 			db.close();
-			if (retornar != "")
+			if (retornar != ""){
 				return retornar;
-			else
+			}else
 				return null;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -711,36 +748,19 @@ public class BaseDatos extends SQLiteOpenHelper {
 		try {
 
 			SQLiteDatabase db = getReadableDatabase();
-			// Cursor c =
-			// db.rawQuery("(select matricula from lecturas where nuevoCiclo is null order by id limit 2) UNION select matricula from lecturas where id<(select id from lecturas where nuevoCiclo is null order by id  limit 1)",
-			// null);
-//			Cursor c = db.rawQuery(
-//					"select matricula from lecturas where nuevoCiclo is null and ciclo="
-//							+ ciclo + " and ruta=" + ruta
-//							+ " order by id limit 1", null);
+
 			Cursor c = db.rawQuery(
 					"select " +
-					"	matricula, id " +
+					"	matricula, consecutivo, id " +
 					"from " +
 					"	lecturas " +
 					"where " +
-					"	 nuevaLectura is null and " +
-					"	 nuevoCiclo is null and " +
-					"	 nuevaRuta is null and " +
-					"	 ciclo="+ ciclo + " and " +
-					"	 ruta=" + ruta+
-					" UNION " +
-					"select " +
-					"	matricula, id " +
-					"from " +
-					"	lecturas " +
-					"where " +
-					"	 nuevaLectura is null and " +
-					"	 nuevoCiclo="+ ciclo + " and " +
-					"	 nuevaRuta=" + ruta+
-					" order by " +
-					"	id " +
-					"limit " +
+					"	 nuevaLectura is null and "+ 
+					"	 ociclo="+ ciclo + " and " +
+					"	 oruta=" + ruta+
+					" order by "+
+					"	consecutivo " +
+					" limit " +
 					"	1", null);
 
 			if (c != null) {
@@ -781,23 +801,11 @@ public class BaseDatos extends SQLiteOpenHelper {
 					"from " +
 					"	lecturas " +
 					"where " +
-					"	 nuevaRuta is null and " +
-					"	 nuevoCiclo is null and " +
-					"	 nuevaRuta is null and " +
-					"	 ciclo="+ ciclo + " and " +
-					"	 ruta=" + ruta+ " and "+
-					"	id<"+id+" "+
-					" UNION " +
-					"select " +
-					"	matricula, id " +
-					"from " +
-					"	lecturas " +
-					"where " +
-					"	 nuevoCiclo="+ ciclo + " and " +
-					"	 nuevaRuta=" + ruta + " and " +
-					"	 id<"+id+" "+
+					"	 ociclo="+ ciclo + " and " +
+					"	 oruta=" + ruta+ " and "+
+					"	 oconsecutivo<"+id+" "+
 					" order by " +
-					"	id DESC " +
+					"	oconsecutivo DESC " +
 					"limit " +
 					"	1", null);
 			if (c != null) {
@@ -828,9 +836,16 @@ public class BaseDatos extends SQLiteOpenHelper {
 			// db.rawQuery("(select matricula from lecturas where nuevoCiclo is null order by id limit 2) UNION select matricula from lecturas where id<(select id from lecturas where nuevoCiclo is null order by id  limit 1)",
 			// null);
 			Cursor c = db.rawQuery(
-					"select matricula from lecturas where ciclo=" + ciclo
-							+ " and ruta=" + ruta + " and id>" + id
-							+ " order by id limit 1", null);
+					"select " +
+					"	matricula " +
+					"from " +
+					"	lecturas " +
+					"where " +
+					"	ociclo=" + ciclo
+					+ " and oruta=" + ruta + "" +
+					" and oconsecutivo>" + id
+					+ " order by oconsecutivo " +
+					"limit 1", null);
 			if (c != null) {
 				while (c.moveToNext()) {
 					retornar = c.getString(0);
@@ -885,9 +900,9 @@ public class BaseDatos extends SQLiteOpenHelper {
 
 			SQLiteDatabase db = getReadableDatabase();
 			Cursor c = db.rawQuery("select a.c as c, b.t as t, c.p as p from " +
-					"(select count(matricula) as c from Lecturas where ciclo="+ciclo+" and ruta="+ruta+") as a, " +
-					"(select count(matricula) as t from Lecturas where ciclo="+ciclo+" and ruta="+ruta+" and nuevoCiclo is not null) as b, " +
-					"(select count(matricula) as p from Lecturas where ciclo="+ciclo+" and ruta="+ruta+" and nuevoCiclo is null) as c", null);
+					"(select count(matricula) as c from Lecturas where ociclo="+ciclo+" and oruta="+ruta+") as a, " +
+					"(select count(matricula) as t from Lecturas where ociclo="+ciclo+" and oruta="+ruta+" and nuevoCiclo is not null) as b, " +
+					"(select count(matricula) as p from Lecturas where ociclo="+ciclo+" and oruta="+ruta+" and nuevoCiclo is null) as c", null);
 			if (c != null) {
 				Log.i("getInformacionRuta","Entre");
 				while (c.moveToNext()) {

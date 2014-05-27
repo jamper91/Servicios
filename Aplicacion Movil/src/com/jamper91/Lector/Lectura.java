@@ -194,6 +194,7 @@ public class Lectura extends Activity implements DialogoCausalListener,
 					this.consecutivo = Integer.parseInt(consecutiv);
 
 					DEnrutamiento = cicl + "-" + rut + "-" + consecutiv;
+					this.enrutamiento=DEnrutamiento;
 
 				} catch (Exception e1) {
 					Log.e("Enrutamiento", e1.getMessage());
@@ -307,8 +308,8 @@ public class Lectura extends Activity implements DialogoCausalListener,
 				// mismo cilo ruta
 				try {
 					posicion = admin.getPosicionUltimaLecturaEditada(
-							String.valueOf(this.id), this.ciclo, this.ruta);
-					posicion = Integer.parseInt(posicion)  + "";
+							String.valueOf(this.id), this.ciclo, this.ruta,this.consecutivo);
+					posicion = (Integer.parseInt(posicion)+1)  + "";
 					this.txtCantidad.setText(posicion + "/" + cantidad);
 				} catch (Exception e) {
 					// TODO: handle exception
@@ -368,8 +369,9 @@ public class Lectura extends Activity implements DialogoCausalListener,
 
 			break;
 		case R.id.Lectura_btnObservacion:
+			Log.i("DMatricula",DMatricula);
 			DialogFragment dO = DialogoObservaciones.newInstance(ob1, ob2, ob3,
-					enrutamiento);
+					enrutamiento,DMatricula);
 			dO.show(getFragmentManager(), "DialogoObservacionesListener");
 			break;
 		case R.id.Lectura_btnReenrutar:
@@ -388,7 +390,7 @@ public class Lectura extends Activity implements DialogoCausalListener,
 	private void anterior() {
 		// Obtengo la matricula de la anterior lectura
 
-		matricula = admin.getPrevLectura(id, ciclo, ruta);
+		matricula = admin.getPrevLectura(this.consecutivo, ciclo, ruta);
 		if (matricula != null) {
 			Log.i("anterior-matricula", matricula);
 			Intent i = new Intent(this, Lectura.class);
@@ -405,7 +407,7 @@ public class Lectura extends Activity implements DialogoCausalListener,
 	private void siguiente() {
 		// Obtengo la matricula de la anterior lectura
 
-		matricula = admin.getNextLectura(id, ciclo, ruta);
+		matricula = admin.getNextLectura(this.consecutivo, ciclo, ruta);
 		if (matricula != null) {
 			Log.i("sigr-matricula", matricula);
 			Intent i = new Intent(this, Lectura.class);
@@ -612,9 +614,15 @@ public class Lectura extends Activity implements DialogoCausalListener,
 		Location location = locationManager
 				.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 		if (location != null) {
-			coordenadas.add(location.getLatitude() + "");
-			coordenadas.add(location.getLongitude() + "");
-			coordenadas.add(location.getAltitude() + "");
+			String lat=location.getLatitude()+"";
+			lat=lat.replace("", ".");
+			String lon=location.getLongitude()+"";
+			lon=lon.replace("", ".");
+			String alt=location.getAltitude()+"";
+			alt=alt.replace("", ".");
+			coordenadas.add(lat);
+			coordenadas.add(lon);
+			coordenadas.add(alt);
 
 		} else {
 			coordenadas.add("0");

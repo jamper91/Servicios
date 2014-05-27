@@ -52,6 +52,7 @@ public class DialogoCausal extends DialogFragment {
 		dC.setArguments(args);
 		return dC;
 	}
+	
 
 	public interface DialogoCausalListener {
 		public void onDialogAceptarClick(DialogFragment dialog, String causal,
@@ -165,7 +166,8 @@ public class DialogoCausal extends DialogFragment {
         //Log.i("rutaFoto", rutaFoto);
         //Log.i("causal", causal);
         
-        path=admin.getRutaSalida()+"Salida/Causal/Causal-"+enrutamiento+".jpg";
+        path=admin.getRutaSalida()+"/Causal/Causal-"+enrutamiento+".jpg";
+        Log.i("Path: ",path);
         
         
 	}
@@ -185,6 +187,11 @@ public class DialogoCausal extends DialogFragment {
 	                    {
 	                        Boolean wantToCloseDialog = true;
 	                        causal = txtCausal.getText().toString();
+	                        Log.i("Causal: ",causal);
+	                        if(rutaFoto==null)
+	                        	rutaFoto="";
+	                        Log.i("rutaFoto: ",rutaFoto);
+	                        
 	                        if(causal.length()==0)
 	                        	causal=null;
 	                        if(causal==null && rutaFoto==null)

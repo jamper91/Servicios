@@ -48,7 +48,7 @@ public class Administrador {
 	 * Constructor de la clase
 	 */
 	private Administrador(Context c) {
-		bd = new BaseDatos(c, "servicios2", null, 12);
+		bd = new BaseDatos(c, "servicios2", null, 13);
 		//Creo las tablas
 		tablas.add("Lecturas");
 		tablas.add("Observaciones");
@@ -427,9 +427,9 @@ public class Administrador {
 	public Vector<String> getPlanLecturasByCicloRuta(String ciclo, String ruta) {
 		return bd.getPlanLecturasByCicloRuta(ciclo,ruta);
 	}
-	public String getPosicionUltimaLecturaEditada(String id,int ciclo, int ruta)
+	public String getPosicionUltimaLecturaEditada(String id,int ciclo, int ruta,int consecutivo)
 	{
-		return bd.getPosicionUltimaLecturaEditada(id, ciclo, ruta);
+		return bd.getPosicionUltimaLecturaEditada(id, ciclo, ruta,consecutivo);
 	}
 	public Vector<String[]> getPlanLecturasByLogin(String login) {
 		return bd.getPlanLecturasByLogin(login);

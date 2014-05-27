@@ -31,13 +31,13 @@ public class DialogoObservaciones extends DialogFragment
 	ImageView btnOb1,btnOb2,btnOb3;
 	
 	//Elementos recibidos como parametros
-	String obs1=null,obs2=null,obs3=null,enrutamiento;
+	String obs1=null,obs2=null,obs3=null,enrutamiento,matricula;
 	String path=null;
 	
 	
 	Administrador admin = Administrador.getInstance(null);
 	private final int REQUEST_CAMERA01 = 1,REQUEST_CAMERA02 = 2,REQUEST_CAMERA03 = 3;
-	static DialogoObservaciones newInstance(String ob1,String ob2, String ob3, String en)
+	static DialogoObservaciones newInstance(String ob1,String ob2, String ob3, String en, String ma)
 	{
 		DialogoObservaciones dC=new DialogoObservaciones();
 		Bundle args=new Bundle();
@@ -45,6 +45,7 @@ public class DialogoObservaciones extends DialogFragment
 		args.putString("ob2", ob2);
 		args.putString("ob3", ob3);
 		args.putString("enrutamiento", en);
+		args.putString("matricula", ma);
 		dC.setArguments(args);
 		return dC;
 	}
@@ -187,7 +188,8 @@ public class DialogoObservaciones extends DialogFragment
         obs3 = getArguments().getString("ob3");
         
         enrutamiento= getArguments().getString("enrutamiento");
-        path=admin.getRutaSalida()+"/Observacion/Observacion-"+enrutamiento+"-";
+        matricula= getArguments().getString("matricula");
+        path=admin.getRutaSalida()+"/Observacion/Observacion-"+matricula+"-";
         Log.i("path",path);
         
         
