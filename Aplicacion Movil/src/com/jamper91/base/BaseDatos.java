@@ -1,5 +1,9 @@
 package com.jamper91.base;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.Vector;
@@ -30,11 +34,11 @@ public class BaseDatos extends SQLiteOpenHelper {
 	public void onCreate(SQLiteDatabase arg0) {
 		// TODO Auto-generated method stub
 		Log.e("onCreate", "Creandose por primera vez");
-		String sql = "CREATE TABLE Causales (   CodigoCausal integer NOT NULL,   Descripcion text );";
+		String sql = "CREATE TABLE Causales (   CodigoCausal integer NOT NULL,   Descripcion text, Obligatorio int );";
 		arg0.execSQL(sql);
 		sql = "CREATE TABLE Lecturas (Matricula text NOT NULL,   Ciclo text,   Ruta text,   Consecutivo integer,   Direccion text,   NumMedidor text, TipoMedidor integer,   LecturaAnterior integer,   ConsumoMedio integer,   NuevoCiclo integer,   NuevaRuta integer,   NuevoConsecutivo integer,   NuevaLectura integer,   Observacion1 integer,   Observacion2 integer,   Observacion3 integer,   Causal integer,   Foto text,   FechaHora text,   Latitud text,   Longitud text,   Altitud text,   Intentos integer,   Login text,   id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, Nombre text, ociclo integer, oruta integer, oconsecutivo integer  ) ";
 		arg0.execSQL(sql);
-		sql = "CREATE TABLE Observaciones (   CodigoObservacion integer NOT NULL,   Descripcion text ) ";
+		sql = "CREATE TABLE Observaciones (   CodigoObservacion integer NOT NULL,   Descripcion text, Obligatorio int ) ";
 		arg0.execSQL(sql);
 		sql = "CREATE TABLE PlanLecturas (   Ciclo character(255) NOT NULL,   Ruta text NOT NULL,   Login text NOT NULL )  ";
 		arg0.execSQL(sql);
@@ -71,11 +75,11 @@ public class BaseDatos extends SQLiteOpenHelper {
 		arg0.execSQL(sql);
 		// Genero las nuevas tablas;
 
-		sql = "CREATE TABLE Causales (   CodigoCausal integer NOT NULL,   Descripcion text );";
+		sql = "CREATE TABLE Causales (   CodigoCausal integer NOT NULL,   Descripcion text, Obligatorio int );";
 		arg0.execSQL(sql);
 		sql = "CREATE TABLE Lecturas (   Matricula text NOT NULL,   Ciclo text,   Ruta text,   Consecutivo integer,   Direccion text,   NumMedidor text, TipoMedidor integer,  LecturaAnterior integer,   ConsumoMedio integer,   NuevoCiclo integer,   NuevaRuta integer,   NuevoConsecutivo integer,   NuevaLectura integer,   Observacion1 integer,   Observacion2 integer,   Observacion3 integer,   Causal integer,   Foto text,   FechaHora text,   Latitud text,   Longitud text,   Altitud text,   Intentos integer,   Login text,   id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, Nombre text, ociclo integer, oruta integer, oconsecutivo integer) ";
 		arg0.execSQL(sql);
-		sql = "CREATE TABLE Observaciones (   CodigoObservacion integer NOT NULL,   Descripcion text ) ";
+		sql = "CREATE TABLE Observaciones (   CodigoObservacion integer NOT NULL,   Descripcion text, Obligatorio int ) ";
 		arg0.execSQL(sql);
 		sql = "CREATE TABLE PlanLecturas (   Ciclo character(255) NOT NULL,   Ruta text NOT NULL,   Login text NOT NULL )  ";
 		arg0.execSQL(sql);
@@ -111,10 +115,13 @@ public class BaseDatos extends SQLiteOpenHelper {
 	 * @param codigo
 	 * @param descripcion
 	 */
-	public void addObservaciones(int codigo, String descripcion) {
+	public void addObservaciones(int codigo, String descripcion,int obligatorio) {
 		SQLiteDatabase db = getWritableDatabase();
-		db.execSQL("insert into Observaciones VALUES(" + codigo + ",'"
-				+ descripcion + "')");
+		String sql="insert into Observaciones values($1,'$2',$3)";
+		sql=sql.replace("$1", codigo+"");
+		sql=sql.replace("$2", descripcion+"");
+		sql=sql.replace("$3", obligatorio+"");
+		db.execSQL(sql);
 	}
 
 	/**
@@ -123,10 +130,13 @@ public class BaseDatos extends SQLiteOpenHelper {
 	 * @param codigo
 	 * @param descripcion
 	 */
-	public void addCausales(int codigo, String descripcion) {
+	public void addCausales(int codigo, String descripcion, int obligatorio) {
 		SQLiteDatabase db = getWritableDatabase();
-		db.execSQL("insert into Causales VALUES(" + codigo + ",'" + descripcion
-				+ "')");
+		String sql="insert into Causales values($1,'$2',$3)";
+		sql=sql.replace("$1", codigo+"");
+		sql=sql.replace("$2", descripcion+"");
+		sql=sql.replace("$3", obligatorio+"");
+		db.execSQL(sql);
 	}
 
 	/**
@@ -966,5 +976,4 @@ public class BaseDatos extends SQLiteOpenHelper {
 		db.execSQL("insert into parametros (Nombre,valor) VALUES('" + nombre + "','"
 				+ valor + "')");
 	}
-
 }

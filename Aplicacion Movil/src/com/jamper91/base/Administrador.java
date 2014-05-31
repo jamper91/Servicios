@@ -2,10 +2,14 @@ package com.jamper91.base;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.Vector;
@@ -48,7 +52,7 @@ public class Administrador {
 	 * Constructor de la clase
 	 */
 	private Administrador(Context c) {
-		bd = new BaseDatos(c, "servicios2", null, 13);
+		bd = new BaseDatos(c, "servicios2", null, 14);
 		//Creo las tablas
 		tablas.add("Lecturas");
 		tablas.add("Observaciones");
@@ -207,13 +211,13 @@ public class Administrador {
 					datos[4], datos[5], Integer.parseInt(datos[6]),
 					Integer.parseInt(datos[7]), Integer.parseInt(datos[8]),datos[9]);
 		} else if (elemento.equals(tablas.get(1))) {
-			bd.addObservaciones(Integer.parseInt(datos[0]), datos[1]);
+			bd.addObservaciones(Integer.parseInt(datos[0]), datos[1],Integer.parseInt(datos[2]));
 		} else if (elemento.equals(tablas.get(3))) 
 		{
 			Log.i("Tipos medidor", "Datos: "+ datos[0]+"-"+datos[1]);
 			bd.addTiposMedidor(datos[0], datos[1]);
 		} else if (elemento.equals(tablas.get(5))) {
-			bd.addCausales(Integer.parseInt(datos[0]), datos[1]);
+			bd.addCausales(Integer.parseInt(datos[0]), datos[1],Integer.parseInt(datos[2]));
 		}
 	}
 
@@ -315,6 +319,7 @@ public class Administrador {
 				escribirArchivo(tabla + "Out.aqu", datos);
 
 			}
+			BD_backup();
 
 			r = true;
 		} catch (Exception e) {
@@ -445,6 +450,35 @@ public class Administrador {
 	public void addParametro(String nombre, String valor) {
 		bd.addParametro(nombre, valor);
 	}
+	public void BD_backup() throws IOException {
+		String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmmss").format(new Date());
+
+		final String inFileName = "/data/data/com.jamper91.servicios/databases/servicios2";
+		File dbFile = new File(inFileName);
+		FileInputStream fis = null;
+
+		fis = new FileInputStream(dbFile);
+
+		String directorio = rutaSalida;
+		File d = new File(directorio);
+		if (!d.exists()) {
+		d.mkdir();
+		}
+		String outFileName = directorio + "/"+"servicios2" + "_"+timeStamp;
+
+		OutputStream output = new FileOutputStream(outFileName);
+
+		byte[] buffer = new byte[1024];
+		int length;
+		while ((length = fis.read(buffer)) > 0) {
+		output.write(buffer, 0, length);
+		}
+
+		output.flush();
+		output.close();
+		fis.close();
+
+		}
 	
 
 }
