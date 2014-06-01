@@ -116,12 +116,18 @@ public class BaseDatos extends SQLiteOpenHelper {
 	 * @param descripcion
 	 */
 	public void addObservaciones(int codigo, String descripcion,int obligatorio) {
-		SQLiteDatabase db = getWritableDatabase();
-		String sql="insert into Observaciones values($1,'$2',$3)";
-		sql=sql.replace("$1", codigo+"");
-		sql=sql.replace("$2", descripcion+"");
-		sql=sql.replace("$3", obligatorio+"");
-		db.execSQL(sql);
+		
+		try {
+			SQLiteDatabase db = getWritableDatabase();
+			String sql = "insert into Observaciones values($1,'$2',$3)";
+			sql = sql.replace("$1", codigo + "");
+			sql = sql.replace("$2", descripcion + "");
+			sql = sql.replace("$3", obligatorio + "");
+			db.execSQL(sql);
+		} catch (Exception e) {
+			// TODO: handle exception
+			Log.e("Error addObservaciones", e.getMessage());
+		}
 	}
 
 	/**
@@ -131,12 +137,16 @@ public class BaseDatos extends SQLiteOpenHelper {
 	 * @param descripcion
 	 */
 	public void addCausales(int codigo, String descripcion, int obligatorio) {
-		SQLiteDatabase db = getWritableDatabase();
-		String sql="insert into Causales values($1,'$2',$3)";
-		sql=sql.replace("$1", codigo+"");
-		sql=sql.replace("$2", descripcion+"");
-		sql=sql.replace("$3", obligatorio+"");
-		db.execSQL(sql);
+		try {
+			SQLiteDatabase db = getWritableDatabase();
+			String sql = "insert into Causales values($1,'$2',$3)";
+			sql = sql.replace("$1", codigo + "");
+			sql = sql.replace("$2", descripcion + "");
+			sql = sql.replace("$3", obligatorio + "");
+			db.execSQL(sql);
+		} catch (Exception e) {
+			Log.e("Error addCausales", e.getMessage());
+		}
 	}
 
 	/**
@@ -366,7 +376,7 @@ public class BaseDatos extends SQLiteOpenHelper {
 		SQLiteDatabase db = getReadableDatabase();
 		Cursor c = db.rawQuery("SELECT * FROM Observaciones;", null);
 		while (c.moveToNext()) {
-			observaciones.add(c.getString(0) + "," + c.getString(1) + ";");
+			observaciones.add(c.getString(0) + "," + c.getString(1) +","+c.getString(2)+  ";");
 		}
 		db.close();
 		return observaciones;
@@ -378,7 +388,7 @@ public class BaseDatos extends SQLiteOpenHelper {
 		SQLiteDatabase db = getReadableDatabase();
 		Cursor c = db.rawQuery("SELECT * FROM Causales;", null);
 		while (c.moveToNext()) {
-			causales.add(c.getString(0) + "," + c.getString(1) + ";");
+			causales.add(c.getString(0) + "," + c.getString(1) +","+c.getString(2)+ ";");
 		}
 		db.close();
 		return causales;

@@ -1,6 +1,7 @@
 package com.jamper91.Lector;
 
 import java.io.File;
+import java.util.Vector;
 
 import com.jamper91.Lector.DialogoCicloRuta.DialogoCicloRutaListener;
 import com.jamper91.base.Administrador;
@@ -34,7 +35,8 @@ public class DialogoCausal extends DialogFragment {
 	EditText txtCausal;
 	ImageView btnCamara,imgFoto;
 	View view;
-	
+	//Variable que contiene todos Causales
+	Vector<String> causales=null;
 	//Variable que almacena la direccion de la foto a tomar
 	private String path=null,causal=null;
 	//Variables que recibe este dialogo, para funcionar bn
@@ -73,6 +75,7 @@ public class DialogoCausal extends DialogFragment {
 		}
 	}
 	public void iniciarlizar() {
+		causales=admin.getAllElementos("Causales");
 		txtCausal = (EditText) view.findViewById(R.id.Dialogo_Causal_txtCausal);
 		btnCamara = (ImageView) view.findViewById(R.id.Dialogo_Causal_btnCamara);
 		btnCamara.setOnClickListener(new View.OnClickListener() {
@@ -171,6 +174,26 @@ public class DialogoCausal extends DialogFragment {
         
         
 	}
+	
+	private boolean esObligatorio(String c)
+	{
+		boolean r=false;
+		//Busco el causal con codigo c
+		for (int i = 0; i < causales.size(); i++) {
+			String cau=causales.get(i);
+			String aux[]=cau.split(",");
+			if(aux[0].equals(c))
+			{
+				Log.i("Causal: esObligatorio", aux[2]);
+				if(aux[2].equals("1;"))
+					r=true;
+				break;
+			}
+		}
+		
+		return r;
+	}
+	
 	//Para evitar que se cierre el dialgo si los datos estan incompletos
 	@Override
 	public void onStart()
@@ -185,9 +208,11 @@ public class DialogoCausal extends DialogFragment {
 	                    @Override
 	                    public void onClick(View v)
 	                    {
-	                        Boolean wantToCloseDialog = true;
+	                    	String men="";
+	                        Boolean wantToCloseDialog = true,obligatorio=esObligatorio(causal);
 	                        causal = txtCausal.getText().toString();
 	                        Log.i("Causal: ",causal);
+	                        Log.i("Causal: ",esObligatorio(causal)+"");
 	                        if(rutaFoto==null)
 	                        	rutaFoto="";
 	                        Log.i("rutaFoto: ",rutaFoto);
@@ -196,11 +221,10 @@ public class DialogoCausal extends DialogFragment {
 	                        	causal=null;
 	                        if(causal==null && rutaFoto==null)
 	                        	wantToCloseDialog=true;
-	                        else if(causal.length()>0 && rutaFoto.length()>0)
-	                        	wantToCloseDialog=true;
-	                        else
+	                        else if(causal.length()>0 && rutaFoto==null && obligatorio){
 	                        	wantToCloseDialog=false;
-							
+	                        	men="Foto Obligatoria";
+	                        }
 	                        
 	                        if(wantToCloseDialog)
 	                        {
@@ -208,7 +232,7 @@ public class DialogoCausal extends DialogFragment {
 										DialogoCausal.this, causal, rutaFoto);
 	                            dismiss();
 	                        }else{
-	                        	Toast.makeText(getActivity(), "Datos incompletos", Toast.LENGTH_SHORT).show();
+	                        	Toast.makeText(getActivity(), men, Toast.LENGTH_SHORT).show();
 	                        }
 	                        
 	                        //else dialog stays open. Make sure you have an obvious way to close the dialog especially if you set cancellable to false.
