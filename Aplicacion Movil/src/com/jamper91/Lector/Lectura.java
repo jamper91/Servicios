@@ -615,11 +615,14 @@ public class Lectura extends Activity implements DialogoCausalListener,
 				.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 		if (location != null) {
 			String lat=location.getLatitude()+"";
-			lat=lat.replace("", ".");
+			Log.i("posicion", "lat: "+lat);
+			//lat=lat.replace("", ".");
 			String lon=location.getLongitude()+"";
-			lon=lon.replace("", ".");
+			Log.i("posicion", "lon: "+lon);
+			//lon=lon.replace("", ".");
 			String alt=location.getAltitude()+"";
-			alt=alt.replace("", ".");
+			Log.i("posicion", "alt: "+alt);
+			//alt=alt.replace("", ".");
 			coordenadas.add(lat);
 			coordenadas.add(lon);
 			coordenadas.add(alt);
@@ -629,6 +632,7 @@ public class Lectura extends Activity implements DialogoCausalListener,
 			coordenadas.add("0");
 			coordenadas.add("0");
 		}
+		Log.i("posicion", coordenadas.toString());
 		return coordenadas;
 	}
 

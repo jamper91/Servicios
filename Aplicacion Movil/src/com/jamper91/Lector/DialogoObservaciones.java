@@ -2,6 +2,7 @@ package com.jamper91.Lector;
 
 import java.io.Console;
 import java.io.File;
+import java.util.Vector;
 
 import com.jamper91.Lector.DialogoCausal.DialogoCausalListener;
 import com.jamper91.base.Administrador;
@@ -19,6 +20,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -33,7 +35,11 @@ public class DialogoObservaciones extends DialogFragment
 	//Elementos recibidos como parametros
 	String obs1=null,obs2=null,obs3=null,enrutamiento,matricula;
 	String path=null;
+	//Variables que determinar si se tomo o no la foto
+	Boolean fo1=false,fo2=false,fo3=false;
 	
+	//Variable que contiene todas las Observaciones
+	Vector<String> observaciones=null;
 	
 	Administrador admin = Administrador.getInstance(null);
 	private final int REQUEST_CAMERA01 = 1,REQUEST_CAMERA02 = 2,REQUEST_CAMERA03 = 3;
@@ -69,6 +75,7 @@ public class DialogoObservaciones extends DialogFragment
 	}
 	public void iniciarlizar()
 	{
+		observaciones=admin.getAllElementos("Observaciones");
 		txtOb1 = (EditText) view.findViewById(R.id.DialogoObservacion_txtCodObs1);
 		txtOb1.setText(obs1);
 		txtOb2 = (EditText) view.findViewById(R.id.DialogoObservacion_txtCodObs2);
@@ -128,15 +135,13 @@ public class DialogoObservaciones extends DialogFragment
 			  switch (requestCode)
 		        {
 		        	case REQUEST_CAMERA01:        
-	                    	//obs1= path+"01.jpg";          
+		        		fo1=true;
 		            break;
 		        	case REQUEST_CAMERA02:        
-
-//	                    	obs2=path+"02.jpg";              
+		        		fo2=true;          
 		            break;
 		        	case REQUEST_CAMERA03:        
-
-//	                    	obs3=path+"03.jpg";               
+		        		fo3=true;            
 		            break;
 		                             
 		        }
@@ -160,14 +165,7 @@ public class DialogoObservaciones extends DialogFragment
 							@Override
 							public void onClick(DialogInterface dialog, int id) {
 								
-								//Obtengo la informacion de los cuadros de texto
-								if(!txtOb1.getText().toString().equals(""))
-									obs1=txtOb1.getText().toString();
-								if(!txtOb2.getText().toString().equals(""))
-									obs2=txtOb2.getText().toString();
-								if(!txtOb3.getText().toString().equals(""))
-									obs3=txtOb3.getText().toString();
-								mListener.onDialogAceptarClick(DialogoObservaciones.this, obs1,obs2,obs3 );
+								
 
 							}
 						})
@@ -194,6 +192,78 @@ public class DialogoObservaciones extends DialogFragment
         
         
         
+	}
+	//Para evitar que se cierre el dialgo si los datos estan incompletos
+	@Override
+	public void onStart()
+	{
+	    super.onStart();    //super.onStart() is where dialog.show() is actually called on the underlying dialog, so we have to do it after this point
+	    AlertDialog d = (AlertDialog)getDialog();
+	    if(d != null)
+	    {
+	        Button positiveButton = (Button) d.getButton(Dialog.BUTTON_POSITIVE);
+	        positiveButton.setOnClickListener(new View.OnClickListener()
+	                {
+	                    @Override
+	                    public void onClick(View v)
+	                    {
+	                    	String men="";
+	                        Boolean wantToCloseDialog = true;
+	                        
+	                      //Obtengo la informacion de los cuadros de texto
+							if(!txtOb1.getText().toString().equals(""))
+								obs1=txtOb1.getText().toString();
+							if(!txtOb2.getText().toString().equals(""))
+								obs2=txtOb2.getText().toString();
+							if(!txtOb3.getText().toString().equals(""))
+								obs3=txtOb3.getText().toString();
+							
+	                        if(obs1!=null && esObligatorio(obs1) && fo1==false)
+	                        {
+	                        	wantToCloseDialog=false;
+	                        	men="Foto de la observacion 1 es obligatoria";
+	                        }
+	                        if(obs2!=null && esObligatorio(obs2) && fo2==false)
+	                        {
+	                        	wantToCloseDialog=false;
+	                        	men="Foto de la observacion 2 es obligatoria";
+	                        }
+	                        if(obs3!=null && esObligatorio(obs3) && fo3==false)
+	                        {
+	                        	wantToCloseDialog=false;
+	                        	men="Foto de la observacion 3 es obligatoria";
+	                        }
+	                        if(wantToCloseDialog)
+	                        {
+	                        	mListener.onDialogAceptarClick(DialogoObservaciones.this, obs1,obs2,obs3 );
+	                            dismiss();
+	                        }else{
+	                        	Toast.makeText(getActivity(), men, Toast.LENGTH_SHORT).show();
+	                        }
+	                        
+	                        //else dialog stays open. Make sure you have an obvious way to close the dialog especially if you set cancellable to false.
+	                    }
+	                });
+	    }
+	}
+	private boolean esObligatorio(String c)
+	{
+		boolean r=false;
+		//Busco el causal con codigo c
+		for (int i = 0; i < observaciones.size(); i++) {
+			String cau=observaciones.get(i);
+			Log.i("esObligatorio", "cau: "+cau);
+			String aux[]=cau.split(",");
+			if(aux[0].equals(c))
+			{
+				Log.i("Causal: esObligatorio", aux[2]);
+				if(aux[2].equals("1;"))
+					r=true;
+				break;
+			}
+		}
+		
+		return r;
 	}
 
 }

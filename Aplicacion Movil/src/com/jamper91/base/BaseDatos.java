@@ -454,16 +454,19 @@ public class BaseDatos extends SQLiteOpenHelper {
 		SQLiteDatabase db = getReadableDatabase();
 		Cursor c = db.rawQuery("SELECT * FROM Lecturas;", null);
 		while (c.moveToNext()) {
-			usuarios.add(c.getString(0) + "," + c.getInt(1) + "," + c.getInt(2)
+			Log.i("getAllLecturas", "Latitud: "+c.getString(19));
+			Log.i("getAllLecturas", "Longitud: "+c.getString(20));
+			Log.i("getAllLecturas", "Altitud: "+c.getString(21));
+			usuarios.add(c.getString(0) + "," + c.getString(1) + "," + c.getString(2)
 					+ "," + c.getString(3) + "," + c.getString(4) + ","
-					+ c.getString(5) + "," + c.getInt(6) + "," + c.getInt(7)
-					+ "," + c.getInt(8) + "," + c.getInt(9) + ","
-					+ c.getInt(10) + "," + c.getInt(11) + "," + c.getInt(12)
-					+ "," + c.getInt(13) + "," + c.getInt(14) + ","
-					+ c.getInt(15) + "," + c.getInt(16) + "," + c.getInt(17)
-					+ "," + c.getInt(18) + "," + c.getInt(19) + ","
-					+ c.getInt(20) + "," + c.getInt(21) + "," + c.getInt(22)
-					+ "," + c.getInt(23) + "," + c.getString(25)+";");
+					+ c.getString(5) + "," + c.getString(6) + "," + c.getString(7)
+					+ "," + c.getString(8) + "," + c.getString(9) + ","
+					+ c.getString(10) + "," + c.getString(11) + "," + c.getString(12)
+					+ "," + c.getString(13) + "," + c.getString(14) + ","
+					+ c.getString(15) + "," + c.getString(16) + "," + c.getString(17)
+					+ "," + c.getString(18) + "," + c.getString(19) + ","
+					+ c.getString(20) + "," + c.getString(21) + "," + c.getString(22)
+					+ "," + c.getString(23) + "," + c.getString(25)+";");
 		}
 		db.close();
 		return usuarios;
@@ -659,6 +662,7 @@ public class BaseDatos extends SQLiteOpenHelper {
 			if (c != null) {
 				c.moveToFirst();
 				retornar.add(c.getString(0));
+				Log.i("getLecturasByCicloRuta", "c.getString(0): "+c.getString(0));
 				retornar.add(getUltimaLecturaEditada(ciclo, ruta));
 				
 			}
@@ -789,11 +793,32 @@ public class BaseDatos extends SQLiteOpenHelper {
 				}
 
 			}
+			
+			if (retornar == "")
+			{
+				c = db.rawQuery(
+						"select " +
+						"	matricula, consecutivo, id " +
+						"from " +
+						"	lecturas " +
+						"where " +
+						"	 ociclo="+ ciclo + " and " +
+						"	 oruta=" + ruta+
+						" order by "+
+						"	consecutivo " +
+						" limit " +
+						"	1", null);
+				if (c != null) {
+					while (c.moveToNext()) {
+						retornar = c.getString(0);
+					}
+
+				}else{
+					retornar=null;
+				}
+			}
 			db.close();
-			if (retornar != "")
-				return retornar;
-			else
-				return null;
+			return retornar;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
