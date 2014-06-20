@@ -287,7 +287,7 @@ public class BaseDatos extends SQLiteOpenHelper {
 	 * @return
 	 */
 	public boolean updateLectura(String matricula, int nuevoCiclo,
-			int nuevaRuta, int nuevoConsecutivo, int nuevaLectura, int ob1,
+			int nuevaRuta, int nuevoConsecutivo, Integer nuevaLectura, int ob1,
 			int ob2, int ob3, int causal, String foto, Date fecha, String latitud,
 			String longitud, String altitud, int inten, String login) {
 
@@ -450,6 +450,7 @@ public class BaseDatos extends SQLiteOpenHelper {
 	}
 
 	public Vector<String> getAllLecturas() {
+		Log.i("getAllLecturas", "Entre");
 		Vector<String> usuarios = new Vector<String>();
 		SQLiteDatabase db = getReadableDatabase();
 		Cursor c = db.rawQuery("SELECT * FROM Lecturas;", null);

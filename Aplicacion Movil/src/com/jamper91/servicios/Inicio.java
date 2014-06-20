@@ -109,5 +109,8 @@ public class Inicio extends Activity {
 		AlertDialog dialog = builder.create();
 		dialog.show();
 	}
+	@Override
+	public void onBackPressed() {
+	}
 
 }

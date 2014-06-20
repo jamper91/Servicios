@@ -34,9 +34,13 @@ public class Administrador {
 	
 	private static String rutaSalida="";
 	/**
-	 * Almacena el nombre de todas las tablas: en este orden 0 --> Lecturas 1
-	 * --> Observaciones 2 --> PlanLecturas 3 --> TiposMedidor 4 --> Usuarios 5
-	 * --> Causales
+	 * Almacena el nombre de todas las tablas: en este orden 
+	 * 0 --> Lecturas 
+	 * 1 --> Observaciones 
+	 * 2 --> PlanLecturas 
+	 * 3 --> TiposMedidor 
+	 * 4 --> Usuarios 
+	 * 5 --> Causales
 	 */
 	private static Vector<String> tablas = new Vector<String>();
 	/**
@@ -409,7 +413,7 @@ public class Administrador {
 	public void setCodigoCausal(String codigoCausal) {
 		this.codigoCausal = codigoCausal;
 	}
-	public boolean updateLectura(String matricula, int nuevoCiclo, int nuevaRuta, int nuevoConsecutivo, int nuevaLectura, int ob1, int ob2, int ob3, int causal, String foto, Date fecha, String latitud, String longitud, String altitud, int inten,String login)
+	public boolean updateLectura(String matricula, int nuevoCiclo, int nuevaRuta, int nuevoConsecutivo, Integer nuevaLectura, int ob1, int ob2, int ob3, int causal, String foto, Date fecha, String latitud, String longitud, String altitud, int inten,String login)
 	{
 		return bd.updateLectura(matricula, nuevoCiclo, nuevaRuta, nuevoConsecutivo, nuevaLectura, ob1, ob2, ob3, causal, foto, fecha, latitud, longitud, altitud, inten, login);
 	}

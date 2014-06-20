@@ -3,10 +3,6 @@ package com.jamper91.Lector;
 import java.io.File;
 import java.util.Vector;
 
-import com.jamper91.Lector.DialogoCicloRuta.DialogoCicloRutaListener;
-import com.jamper91.base.Administrador;
-import com.jamper91.servicios.R;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -17,16 +13,17 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.opengl.Visibility;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.provider.MediaStore.Audio.Media;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.jamper91.base.Administrador;
+import com.jamper91.servicios.R;
 
 @SuppressLint("NewApi")
 public class DialogoCausal extends DialogFragment {
@@ -43,6 +40,9 @@ public class DialogoCausal extends DialogFragment {
 	String enrutamiento="",rutaFoto=null;
 	private final int REQUEST_CAMERA = 1;
 	Administrador admin = Administrador.getInstance(null);
+	
+	//Para determinar is tomo la foto
+	Boolean fc1=false;
 	
 	static DialogoCausal newInstance(String enrutamiento,String causal, String rutaFoto)
 	{
@@ -123,6 +123,7 @@ public class DialogoCausal extends DialogFragment {
 			        {
 			        	case REQUEST_CAMERA:    
 			        		rutaFoto=path;
+			        		fc1=true;
 			            break ;
 			                             
 			        }
@@ -209,19 +210,20 @@ public class DialogoCausal extends DialogFragment {
 	                    public void onClick(View v)
 	                    {
 	                    	String men="";
+	                    	causal = txtCausal.getText().toString();
 	                        Boolean wantToCloseDialog = true,obligatorio=esObligatorio(causal);
-	                        causal = txtCausal.getText().toString();
-	                        Log.i("Causal: ",causal);
-	                        Log.i("Causal: ",esObligatorio(causal)+"");
+	                        
+	                        Log.i("causal: ",causal+"");
+	                        Log.i("Obligatorio: ",obligatorio+"");
+	                        Log.i("fc1: ",fc1+"");
 	                        if(rutaFoto==null)
 	                        	rutaFoto="";
-	                        Log.i("rutaFoto: ",rutaFoto);
 	                        
 	                        if(causal.length()==0)
 	                        	causal=null;
-	                        if(causal==null && rutaFoto==null)
+	                        if(causal==null && fc1==false)
 	                        	wantToCloseDialog=true;
-	                        else if(causal.length()>0 && rutaFoto==null && obligatorio){
+	                        else if(causal.length()>0 && fc1==false && obligatorio){
 	                        	wantToCloseDialog=false;
 	                        	men="Foto Obligatoria";
 	                        }

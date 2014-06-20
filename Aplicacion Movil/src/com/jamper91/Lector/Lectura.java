@@ -176,17 +176,20 @@ public class Lectura extends Activity implements DialogoCausalListener,
 					String cicl, rut, consecutiv;
 					Log.i("NuevoCiclo", lectura.get("NuevoCiclo"));
 					Log.i("Ciclo", lectura.get("Ciclo"));
-					if (lectura.get("NuevoCiclo").equals("0") || lectura.get("NuevoCiclo").equals("null"))
+					if (lectura.get("NuevoCiclo").equals("0")
+							|| lectura.get("NuevoCiclo").equals("null"))
 						cicl = lectura.get("Ciclo");
 					else
 						cicl = lectura.get("NuevoCiclo");
 					Log.i("NuevaRuta", lectura.get("NuevaRuta"));
 					Log.i("Ruta", lectura.get("Ruta"));
-					if (lectura.get("NuevaRuta").equals("0") || lectura.get("NuevaRuta").equals("null"))
+					if (lectura.get("NuevaRuta").equals("0")
+							|| lectura.get("NuevaRuta").equals("null"))
 						rut = lectura.get("Ruta");
 					else
 						rut = lectura.get("NuevaRuta");
-					if (lectura.get("NuevoConsecutivo").equals("0") || lectura.get("NuevoConsecutivo").equals("null"))
+					if (lectura.get("NuevoConsecutivo").equals("0")
+							|| lectura.get("NuevoConsecutivo").equals("null"))
 						consecutiv = lectura.get("Consecutivo");
 					else
 						consecutiv = lectura.get("NuevoConsecutivo");
@@ -194,7 +197,7 @@ public class Lectura extends Activity implements DialogoCausalListener,
 					this.consecutivo = Integer.parseInt(consecutiv);
 
 					DEnrutamiento = cicl + "-" + rut + "-" + consecutiv;
-					this.enrutamiento=DEnrutamiento;
+					this.enrutamiento = DEnrutamiento;
 
 				} catch (Exception e1) {
 					Log.e("Enrutamiento", e1.getMessage());
@@ -308,8 +311,9 @@ public class Lectura extends Activity implements DialogoCausalListener,
 				// mismo cilo ruta
 				try {
 					posicion = admin.getPosicionUltimaLecturaEditada(
-							String.valueOf(this.id), this.ciclo, this.ruta,this.consecutivo);
-					posicion = (Integer.parseInt(posicion)+1)  + "";
+							String.valueOf(this.id), this.ciclo, this.ruta,
+							this.consecutivo);
+					posicion = (Integer.parseInt(posicion) + 1) + "";
 					this.txtCantidad.setText(posicion + "/" + cantidad);
 				} catch (Exception e) {
 					// TODO: handle exception
@@ -369,9 +373,9 @@ public class Lectura extends Activity implements DialogoCausalListener,
 
 			break;
 		case R.id.Lectura_btnObservacion:
-			Log.i("DMatricula",DMatricula);
+			Log.i("DMatricula", DMatricula);
 			DialogFragment dO = DialogoObservaciones.newInstance(ob1, ob2, ob3,
-					enrutamiento,DMatricula);
+					enrutamiento, DMatricula);
 			dO.show(getFragmentManager(), "DialogoObservacionesListener");
 			break;
 		case R.id.Lectura_btnReenrutar:
@@ -431,70 +435,111 @@ public class Lectura extends Activity implements DialogoCausalListener,
 		nuevaRuta = this.nRuta;
 		nuevoConsecutivo = this.nConsecutivo;
 		try {
-			if (txtLectura.getText().toString().length() >= 0) {
-				nuevaLectura = Integer
-						.parseInt(txtLectura.getText().toString());
-				String validarL = validarLectura(nuevaLectura);
-				Log.i("validas", validarL);
-				if (validarL.equals("ok") || nuevaLectura == lecturaError) {
-					if (rutaFoto == null)
-						rutaFoto = "";
-					if (causal == null)
-						causal = "0";
-					if (ob1 == null)
-						ob1 = "0";
-					if (ob2 == null)
-						ob2 = "0";
-					if (ob3 == null)
-						ob3 = "0";
-					Vector<String> co = posicion();
-					if (admin.updateLectura(this.matricula, nuevoCiclo,
-							nuevaRuta, nuevoConsecutivo, nuevaLectura,
-							Integer.parseInt(ob1), Integer.parseInt(ob2),
-							Integer.parseInt(ob3),
-							Integer.parseInt(this.causal), this.rutaFoto,
-							new Date(), co.get(0), co.get(1), co.get(2), 0,
-							admin.getLogin())) {
-						// dialogo("Lectura registrada", "Registro");
-						AlertDialog.Builder builder = new AlertDialog.Builder(
-								this);
-						builder.setPositiveButton("Aceptar",
-								new DialogInterface.OnClickListener() {
-									public void onClick(DialogInterface dialog,
-											int id) {
-										// User clicked OK button
-										siguiente();
-									}
-								});
+			if (causal == null) {
+				Log.i("registrar", "Entre al if");
+				if (txtLectura.getText().toString().length() >= 0) {
+					nuevaLectura = Integer.parseInt(txtLectura.getText()
+							.toString());
+					String validarL = validarLectura(nuevaLectura);
+					if (validarL.equals("ok") || nuevaLectura == lecturaError) {
+						if (rutaFoto == null)
+							rutaFoto = "";
+						if (causal == null)
+							causal = "0";
+						if (ob1 == null)
+							ob1 = "0";
+						if (ob2 == null)
+							ob2 = "0";
+						if (ob3 == null)
+							ob3 = "0";
+						Vector<String> co = posicion();
+						if (admin.updateLectura(this.matricula, nuevoCiclo,
+								nuevaRuta, nuevoConsecutivo, nuevaLectura,
+								Integer.parseInt(ob1), Integer.parseInt(ob2),
+								Integer.parseInt(ob3),
+								Integer.parseInt(this.causal), this.rutaFoto,
+								new Date(), co.get(0), co.get(1), co.get(2), 0,
+								admin.getLogin())) {
+							// dialogo("Lectura registrada", "Registro");
+							AlertDialog.Builder builder = new AlertDialog.Builder(
+									this);
+							builder.setPositiveButton("Aceptar",
+									new DialogInterface.OnClickListener() {
+										public void onClick(
+												DialogInterface dialog, int id) {
+											// User clicked OK button
+											siguiente();
+										}
+									});
 
-						// 2. Chain together various setter methods to set the
-						// dialog characteristics
-						builder.setMessage("Lectura registrada").setTitle(
-								"Registro");
+							builder.setMessage("Lectura registrada").setTitle(
+									"Registro");
 
-						// 3. Get the AlertDialog from create()
-						AlertDialog dialog = builder.create();
-						dialog.show();
+							// 3. Get the AlertDialog from create()
+							AlertDialog dialog = builder.create();
+							dialog.show();
+						} else {
+							dialogo("Error al actualizar el registro", "Error");
+						}
 					} else {
-						// Toast.makeText(this,
-						// "Error al actualizar el registro",
-						// Toast.LENGTH_SHORT).show();
-						dialogo("Error al actualizar el registro", "Error");
-					}
-				} else {
-					// Toast.makeText(this,"Verificar lectura del predio" ,
-					// Toast.LENGTH_SHORT).show();
-					dialogo("Verificar lectura del predio", "Error");
-					txtLectura.setText("");
-					lecturaError = nuevaLectura;
-				}
 
+						dialogo("Verificar lectura del predio", "Error");
+						txtLectura.setText("");
+						lecturaError = nuevaLectura;
+					}
+
+				} else {
+					// Toast.makeText(this,
+					// "Error al actualizar el registro: la lectura no puede estar vacia ",
+					// Toast.LENGTH_SHORT).show();
+					dialogo("Error al actualizar el registro: la lectura no puede estar vacia ",
+							"Error");
+				}
 			} else {
-				// Toast.makeText(this,
-				// "Error al actualizar el registro: la lectura no puede estar vacia ",
-				// Toast.LENGTH_SHORT).show();
-				dialogo("Error al actualizar el registro: la lectura no puede estar vacia ",
-						"Error");
+				Log.i("registrar", "Entre al else");
+				if (rutaFoto == null)
+					rutaFoto = "";
+				if (causal == null)
+					causal = "0";
+				if (ob1 == null)
+					ob1 = "0";
+				if (ob2 == null)
+					ob2 = "0";
+				if (ob3 == null)
+					ob3 = "0";
+				Log.i("registrar", "matricula: "+matricula);
+				Log.i("registrar", "nuevoCiclo: "+nuevoCiclo);
+				Log.i("registrar", "nuevaRuta: "+nuevaRuta);
+				Log.i("registrar", "nuevoConsecutivo: "+nuevoConsecutivo);
+				Log.i("registrar", "nuevaLectura: "+null);
+				
+				Vector<String> co = posicion();
+				if (admin.updateLectura(this.matricula, nuevoCiclo, nuevaRuta,
+						nuevoConsecutivo, null, Integer.parseInt(ob1),
+						Integer.parseInt(ob2), Integer.parseInt(ob3),
+						Integer.parseInt(this.causal), this.rutaFoto,
+						new Date(), co.get(0), co.get(1), co.get(2), 0,
+						admin.getLogin())) {
+					AlertDialog.Builder builder = new AlertDialog.Builder(this);
+					builder.setPositiveButton("Aceptar",
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int id) {
+									// User clicked OK button
+									siguiente();
+								}
+							});
+
+					// 2. Chain together various setter methods to set
+					// the
+					// dialog characteristics
+					builder.setMessage("Lectura registrada").setTitle(
+							"Registro");
+
+					// 3. Get the AlertDialog from create()
+					AlertDialog dialog = builder.create();
+					dialog.show();
+				}
 			}
 
 		} catch (Exception e) {
@@ -502,6 +547,10 @@ public class Lectura extends Activity implements DialogoCausalListener,
 					"Error al actualizar el registro: " + e.toString(),
 					Toast.LENGTH_SHORT).show();
 			dialogo("Error al actualizar el registro: " + e.toString(), "Error");
+			Log.i("registrar", "e.toString: "+e.toString());
+			Log.i("registrar", "e.getLocalizedMessage: "+e.getLocalizedMessage());
+			Log.i("registrar", "e.getCause: "+e.getCause());
+			Log.i("registrar", "e.getMessage: "+e.getMessage());
 		}
 
 	}
@@ -510,6 +559,7 @@ public class Lectura extends Activity implements DialogoCausalListener,
 	public void onDialogAceptarClick(DialogFragment dialog, String causal1,
 			String rutaFoto1) {
 		// TODO Auto-generated method stub
+		Log.i("onDialogAceptarClick", "causal: "+causal1);
 		this.causal = causal1;
 		this.rutaFoto = rutaFoto1;
 		if (causal != null && rutaFoto != null)
@@ -614,15 +664,15 @@ public class Lectura extends Activity implements DialogoCausalListener,
 		Location location = locationManager
 				.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 		if (location != null) {
-			String lat=location.getLatitude()+"";
-			Log.i("posicion", "lat: "+lat);
-			//lat=lat.replace("", ".");
-			String lon=location.getLongitude()+"";
-			Log.i("posicion", "lon: "+lon);
-			//lon=lon.replace("", ".");
-			String alt=location.getAltitude()+"";
-			Log.i("posicion", "alt: "+alt);
-			//alt=alt.replace("", ".");
+			String lat = location.getLatitude() + "";
+			Log.i("posicion", "lat: " + lat);
+			// lat=lat.replace("", ".");
+			String lon = location.getLongitude() + "";
+			Log.i("posicion", "lon: " + lon);
+			// lon=lon.replace("", ".");
+			String alt = location.getAltitude() + "";
+			Log.i("posicion", "alt: " + alt);
+			// alt=alt.replace("", ".");
 			coordenadas.add(lat);
 			coordenadas.add(lon);
 			coordenadas.add(alt);
