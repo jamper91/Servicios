@@ -132,7 +132,7 @@ public class Lectura extends Activity implements DialogoCausalListener,
 		txtEnrutamiento = (TextView) findViewById(R.id.Lectura_txtEnrutamiento);
 		txtDireccion = (TextView) findViewById(R.id.Lectura_txtDireccion);
 		txtLectura = (EditText) findViewById(R.id.Lectura_txtLectura2);
-		btnCausal = (ImageView) findViewById(R.id.Lectura_btnCausal);
+		btnCausal = (ImageView) findViewById(R.id.menuLector_imgMantenimiento);
 		btnObservacion = (ImageView) findViewById(R.id.Lectura_btnObservacion);
 		txtCantidad = (TextView) findViewById(R.id.Lecturas_txtCantidad);
 		txtCantidad.setText("1/" + cantidad);
@@ -364,10 +364,10 @@ public class Lectura extends Activity implements DialogoCausalListener,
 		case R.id.Lectura_btnSiguiente:
 			siguiente();
 			break;
-		case R.id.Lectura_btnCausal:
+		case R.id.menuLector_imgMantenimiento:
 			// admin.cerrarConexionBD();
 			// Muestro el cuadro de dialogo
-			DialogFragment dA = DialogoCausal.newInstance(this.enrutamiento,
+			DialogFragment dA = DialogoCausal.newInstance(DMatricula,
 					this.causal, this.rutaFoto);
 			dA.show(getFragmentManager(), "DialogoCausalListener");
 
@@ -555,6 +555,7 @@ public class Lectura extends Activity implements DialogoCausalListener,
 
 	}
 
+	//Evento cuando se da clic en el boton aceptar del dialogo para ingresar causal
 	@Override
 	public void onDialogAceptarClick(DialogFragment dialog, String causal1,
 			String rutaFoto1) {
@@ -620,7 +621,7 @@ public class Lectura extends Activity implements DialogoCausalListener,
 		return "ok";
 
 	}
-
+	//Evento cuando se da clic en el boton aceptar del dialogo para ingresar observaciones
 	@Override
 	public void onDialogAceptarClick(DialogFragment dialog, String obs1,
 			String obs2, String obs3) {
@@ -686,15 +687,31 @@ public class Lectura extends Activity implements DialogoCausalListener,
 		return coordenadas;
 	}
 
+	//Evento cuando se da clic en el boton aceptar del dialogo para reenrutar
 	@Override
 	public void onDialogAceptarReenrutarClick(DialogFragment dialog,
 			int nciclo, int nruta, int nconsecutivo) {
 		nCiclo = nciclo;
 		nRuta = nruta;
 		nConsecutivo = nconsecutivo;
+		//Ahora debo actualizar la informacion y recargar
+		admin.reenrutar(this.matricula, nCiclo, nRuta, nConsecutivo);
+		
+		//Me encargo de buscar en la base de datos la primera matricula a leer y la cantidad de elementos
+		Vector<String> aux=admin.getLecturasByCicloRuta(ciclo, ruta);
+		if(aux!=null)
+		{
+			String cantidad=aux.get(0);
+			String matricula=aux.get(1);
+			
+			Intent i = new Intent(this, Lectura.class);
+			i.putExtra("cantidad", cantidad);
+			i.putExtra("matricula", matricula);
+			startActivity(i);
+		}
 
 	}
-
+	//Evento cuando se da clic en el boton aceptar del dialogo para validar informacion
 	@Override
 	public void onDialogValidarAceptarClick(DialogFragment dialog,
 			String numeroContador) {
@@ -711,5 +728,9 @@ public class Lectura extends Activity implements DialogoCausalListener,
 			this.btnReenrutar.setEnabled(false);
 		}
 
+	}
+	
+	
+	public void onBackPressed() {
 	}
 }

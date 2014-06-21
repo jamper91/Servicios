@@ -42,6 +42,12 @@ public class MenuLector extends Activity implements DialogoCicloRutaListener {
 		case R.id.imgEncuestas:
 				dialogo("Esta funcion aun no ha sido implementada", "Sin implementar");
 			break;
+		case R.id.menuLector_imgCatastro:
+			dialogo("Esta funcion aun no ha sido implementada", "Sin implementar");
+		break;	
+		case R.id.menuLector_imgMantenimiento:
+			dialogo("Esta funcion aun no ha sido implementada", "Sin implementar");
+		break;
 		case R.id.menuLector_btnSalir:
 			Intent i = new Intent(this, Inicio.class);
 			startActivity(i);
@@ -105,6 +111,7 @@ public class MenuLector extends Activity implements DialogoCicloRutaListener {
 		else
 			return false;
 	}
-	
+	public void onBackPressed() {
+	}
 
 }

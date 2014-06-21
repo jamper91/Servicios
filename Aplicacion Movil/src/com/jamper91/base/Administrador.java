@@ -30,17 +30,13 @@ public class Administrador {
 
 	private static BaseDatos bd;
 	private static Administrador instancia = null;
-	private static String  rutaEntrada="";
-	
-	private static String rutaSalida="";
+	private static String rutaEntrada = "";
+
+	private static String rutaSalida = "";
 	/**
-	 * Almacena el nombre de todas las tablas: en este orden 
-	 * 0 --> Lecturas 
-	 * 1 --> Observaciones 
-	 * 2 --> PlanLecturas 
-	 * 3 --> TiposMedidor 
-	 * 4 --> Usuarios 
-	 * 5 --> Causales
+	 * Almacena el nombre de todas las tablas: en este orden 0 --> Lecturas 1
+	 * --> Observaciones 2 --> PlanLecturas 3 --> TiposMedidor 4 --> Usuarios 5
+	 * --> Causales
 	 */
 	private static Vector<String> tablas = new Vector<String>();
 	/**
@@ -49,25 +45,24 @@ public class Administrador {
 	 */
 	private static String rol, login;
 
-	private String rutaFoto,codigoCausal;
-	
+	private String rutaFoto, codigoCausal;
 
 	/**
 	 * Constructor de la clase
 	 */
 	private Administrador(Context c) {
 		bd = new BaseDatos(c, "servicios2", null, 14);
-		//Creo las tablas
+		// Creo las tablas
 		tablas.add("Lecturas");
 		tablas.add("Observaciones");
 		tablas.add("PlanLecturas");
 		tablas.add("TiposMedidor");
 		tablas.add("Usuarios");
 		tablas.add("Causales");
-		
-		rutaEntrada =Environment.getExternalStoragePublicDirectory(
+
+		rutaEntrada = Environment.getExternalStoragePublicDirectory(
 				"/AquaMovil/Entrada/").toString();
-		rutaSalida=Environment.getExternalStoragePublicDirectory(
+		rutaSalida = Environment.getExternalStoragePublicDirectory(
 				"/AquaMovil/Salida/").toString();
 	}
 
@@ -85,9 +80,8 @@ public class Administrador {
 
 		return instancia;
 	}
-	
-	public static void cerrarConexionBD()
-	{
+
+	public static void cerrarConexionBD() {
 		bd.close();
 	}
 
@@ -105,19 +99,23 @@ public class Administrador {
 		}
 
 	}
+
 	/**
-	 * Funcion que se encarga de leer un archivo y retornar la cantidad de lineas leida
-	 * @param nombre Nombre del archivo a leer
+	 * Funcion que se encarga de leer un archivo y retornar la cantidad de
+	 * lineas leida
+	 * 
+	 * @param nombre
+	 *            Nombre del archivo a leer
 	 * @return Cantidad de filas leidas, -1 en caso de algun error
 	 */
 	public int leerArchivo(String nombre) {
-		
-//		nombre = Environment.getExternalStoragePublicDirectory(
-//				Environment.DIRECTORY_DOWNLOADS).toString()
-//				+ "/" + nombre;
-		nombre=rutaEntrada+"/"+nombre;
+
+		// nombre = Environment.getExternalStoragePublicDirectory(
+		// Environment.DIRECTORY_DOWNLOADS).toString()
+		// + "/" + nombre;
+		nombre = rutaEntrada + "/" + nombre;
 		File f = new File(nombre);
-		int cantidadRegistros=0;
+		int cantidadRegistros = 0;
 		BufferedReader entrada;
 		try {
 			entrada = new BufferedReader(new FileReader(f));
@@ -127,7 +125,7 @@ public class Administrador {
 			String tabla = entrada.readLine();
 			// Quito el ;
 			tabla = tabla.substring(0, tabla.length() - 1);
-			//Elimino todos los datos que hayan en esa tabla
+			// Elimino todos los datos que hayan en esa tabla
 			deleteAllElementos(tabla);
 			while (entrada.ready()) {
 				// Leo la linea con datos
@@ -147,11 +145,10 @@ public class Administrador {
 			return cantidadRegistros;
 
 		} catch (IOException e) {
-			
-			Log.e("leerArchivo", "Error al leer el archivo "+nombre, e);
+
+			Log.e("leerArchivo", "Error al leer el archivo " + nombre, e);
 			return -1;
-		}catch(Exception e)
-		{
+		} catch (Exception e) {
 			return -1;
 		}
 	}
@@ -166,8 +163,8 @@ public class Administrador {
 	 */
 
 	public void escribirArchivo(String nombre, Vector<String> datos) {
-		nombre = rutaSalida + "/"+ nombre;
-		
+		nombre = rutaSalida + "/" + nombre;
+
 		FileWriter fichero = null;
 		PrintWriter pw = null;
 		String linea;
@@ -175,7 +172,7 @@ public class Administrador {
 			fichero = new FileWriter(nombre);
 			pw = new PrintWriter(fichero);
 			for (String dato : datos) {
-				pw.println(dato+"\n");
+				pw.println(dato + "\n");
 			}
 
 		} catch (Exception e) {
@@ -202,8 +199,7 @@ public class Administrador {
 	 *            Datos a insertar
 	 */
 	public void addElemento(String elemento, String[] datos) {
-		
-		
+
 		if (elemento.equals(tablas.get(4))) {
 			bd.addUsuarios(Integer.parseInt(datos[0]), datos[1], datos[2],
 					datos[3], datos[4], datos[5]);
@@ -213,15 +209,17 @@ public class Administrador {
 			bd.addLecturas(datos[0], Integer.parseInt(datos[1]),
 					Integer.parseInt(datos[2]), Integer.parseInt(datos[3]),
 					datos[4], datos[5], Integer.parseInt(datos[6]),
-					Integer.parseInt(datos[7]), Integer.parseInt(datos[8]),datos[9]);
+					Integer.parseInt(datos[7]), Integer.parseInt(datos[8]),
+					datos[9]);
 		} else if (elemento.equals(tablas.get(1))) {
-			bd.addObservaciones(Integer.parseInt(datos[0]), datos[1],Integer.parseInt(datos[2]));
-		} else if (elemento.equals(tablas.get(3))) 
-		{
-			Log.i("Tipos medidor", "Datos: "+ datos[0]+"-"+datos[1]);
+			bd.addObservaciones(Integer.parseInt(datos[0]), datos[1],
+					Integer.parseInt(datos[2]));
+		} else if (elemento.equals(tablas.get(3))) {
+			Log.i("Tipos medidor", "Datos: " + datos[0] + "-" + datos[1]);
 			bd.addTiposMedidor(datos[0], datos[1]);
 		} else if (elemento.equals(tablas.get(5))) {
-			bd.addCausales(Integer.parseInt(datos[0]), datos[1],Integer.parseInt(datos[2]));
+			bd.addCausales(Integer.parseInt(datos[0]), datos[1],
+					Integer.parseInt(datos[2]));
 		}
 	}
 
@@ -264,7 +262,7 @@ public class Administrador {
 		} else if (tabla.equals(tablas.get(1))) {
 			r = bd.deleteAllObservaciones();
 		} else if (tabla.equals(tablas.get(4))) {
-			
+
 			r = bd.deleteAllTiposMedidor();
 		} else if (tabla.equals(tablas.get(5))) {
 			r = bd.deleteAllCausales();
@@ -374,15 +372,15 @@ public class Administrador {
 	public static void setLogin(String login) {
 		Administrador.login = login;
 	}
-	
-	public Vector<String> getLecturasByCicloRuta(int ciclo, int ruta)
-	{
+
+	public Vector<String> getLecturasByCicloRuta(int ciclo, int ruta) {
 		return bd.getLecturasByCicloRuta(ciclo, ruta);
 	}
-	public Hashtable<String, String> getLecturaMatricula(String matricula)
-	{
+
+	public Hashtable<String, String> getLecturaMatricula(String matricula) {
 		return bd.getLecturaByMatricula(matricula);
 	}
+
 	public static String getRutaEntrada() {
 		return rutaEntrada;
 	}
@@ -398,6 +396,7 @@ public class Administrador {
 	public static void setRutaSalida(String rutaSalida) {
 		Administrador.rutaSalida = rutaSalida;
 	}
+
 	public String getRutaFoto() {
 		return rutaFoto;
 	}
@@ -413,49 +412,61 @@ public class Administrador {
 	public void setCodigoCausal(String codigoCausal) {
 		this.codigoCausal = codigoCausal;
 	}
-	public boolean updateLectura(String matricula, int nuevoCiclo, int nuevaRuta, int nuevoConsecutivo, Integer nuevaLectura, int ob1, int ob2, int ob3, int causal, String foto, Date fecha, String latitud, String longitud, String altitud, int inten,String login)
-	{
-		return bd.updateLectura(matricula, nuevoCiclo, nuevaRuta, nuevoConsecutivo, nuevaLectura, ob1, ob2, ob3, causal, foto, fecha, latitud, longitud, altitud, inten, login);
+
+	public boolean updateLectura(String matricula, int nuevoCiclo,
+			int nuevaRuta, int nuevoConsecutivo, Integer nuevaLectura, int ob1,
+			int ob2, int ob3, int causal, String foto, Date fecha,
+			String latitud, String longitud, String altitud, int inten,
+			String login) {
+		return bd.updateLectura(matricula, nuevoCiclo, nuevaRuta,
+				nuevoConsecutivo, nuevaLectura, ob1, ob2, ob3, causal, foto,
+				fecha, latitud, longitud, altitud, inten, login);
 	}
-	public String getUltimaLecturaEditada(int ciclo, int ruta)
-	{
+
+	public String getUltimaLecturaEditada(int ciclo, int ruta) {
 		return bd.getUltimaLecturaEditada(ciclo, ruta);
 	}
-	public String getPrevLectura(int id,int ciclo, int ruta)
-	{
+
+	public String getPrevLectura(int id, int ciclo, int ruta) {
 		return bd.getPrevLectura(id, ciclo, ruta);
 	}
-	public String getNextLectura(int id,int ciclo, int ruta)
-	{
+
+	public String getNextLectura(int id, int ciclo, int ruta) {
 		return bd.getNextLectura(id, ciclo, ruta);
 	}
-	public Vector<String> getTipoMedidor(String tipo)
-	{
+
+	public Vector<String> getTipoMedidor(String tipo) {
 		return bd.getTipoMedidor(tipo);
 	}
+
 	public Vector<String> getPlanLecturasByCicloRuta(String ciclo, String ruta) {
-		return bd.getPlanLecturasByCicloRuta(ciclo,ruta);
+		return bd.getPlanLecturasByCicloRuta(ciclo, ruta);
 	}
-	public String getPosicionUltimaLecturaEditada(String id,int ciclo, int ruta,int consecutivo)
-	{
-		return bd.getPosicionUltimaLecturaEditada(id, ciclo, ruta,consecutivo);
+
+	public String getPosicionUltimaLecturaEditada(String id, int ciclo,
+			int ruta, int consecutivo) {
+		return bd.getPosicionUltimaLecturaEditada(id, ciclo, ruta, consecutivo);
 	}
+
 	public Vector<String[]> getPlanLecturasByLogin(String login) {
 		return bd.getPlanLecturasByLogin(login);
 	}
-	public String[] getInformacionRuta(String ciclo, String ruta) 
-	{
+
+	public String[] getInformacionRuta(String ciclo, String ruta) {
 		return bd.getInformacionRuta(ciclo, ruta);
 	}
-	public String getParametroByNombre(String nombre)
-	{
+
+	public String getParametroByNombre(String nombre) {
 		return bd.getParametroByNombre(nombre);
 	}
+
 	public void addParametro(String nombre, String valor) {
 		bd.addParametro(nombre, valor);
 	}
+
 	public void BD_backup() throws IOException {
-		String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmmss").format(new Date());
+		String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmmss")
+				.format(new Date());
 
 		final String inFileName = "/data/data/com.jamper91.servicios/databases/servicios2";
 		File dbFile = new File(inFileName);
@@ -466,23 +477,26 @@ public class Administrador {
 		String directorio = rutaSalida;
 		File d = new File(directorio);
 		if (!d.exists()) {
-		d.mkdir();
+			d.mkdir();
 		}
-		String outFileName = directorio + "/"+"servicios2" + "_"+timeStamp;
+		String outFileName = directorio + "/" + "servicios2" + "_" + timeStamp;
 
 		OutputStream output = new FileOutputStream(outFileName);
 
 		byte[] buffer = new byte[1024];
 		int length;
 		while ((length = fis.read(buffer)) > 0) {
-		output.write(buffer, 0, length);
+			output.write(buffer, 0, length);
 		}
 
 		output.flush();
 		output.close();
 		fis.close();
 
-		}
-	
+	}
+	public boolean reenrutar(String matricula,int nuevoCiclo,int nuevaRuta,int nuevoConsecutivo)
+	{
+		return bd.reenrutar(matricula, nuevoCiclo, nuevaRuta, nuevoConsecutivo);
+	}
 
 }

@@ -915,8 +915,10 @@ public class BaseDatos extends SQLiteOpenHelper {
 		try {
 
 			SQLiteDatabase db = getReadableDatabase();
+//			Cursor c = db.rawQuery(
+//					"select * from PlanLecturas where login='"+login+"'", null);
 			Cursor c = db.rawQuery(
-					"select * from PlanLecturas where login='"+login+"'", null);
+					"select * from PlanLecturas", null);
 			if (c != null) {
 				while (c.moveToNext()) {
 					String[] pl=new String[3];
@@ -1011,5 +1013,28 @@ public class BaseDatos extends SQLiteOpenHelper {
 		SQLiteDatabase db = getWritableDatabase();
 		db.execSQL("insert into parametros (Nombre,valor) VALUES('" + nombre + "','"
 				+ valor + "')");
+	}
+	
+	public boolean reenrutar(String matricula,int nuevoCiclo,int nuevaRuta,int nuevoConsecutivo)
+	{
+		try {
+			
+			SQLiteDatabase db = getWritableDatabase();
+			String sql = "update Lecturas set ";
+			if (nuevoCiclo > 0)
+				sql += " " + "ociclo=" + nuevoCiclo;
+			if (nuevaRuta > 0)
+				sql += "," + "oruta=" + nuevaRuta;
+			if (nuevoConsecutivo > 0)
+				sql += "," + "oconsecutivo=" + nuevoConsecutivo;
+			sql+=" where Matricula="+matricula;
+			db.execSQL(sql);
+			return true;
+		} catch (Exception e) {
+			// TODO: handle exception
+			Log.e("Error reenrutar", e.getMessage());
+			return false;
+		}
+	
 	}
 }

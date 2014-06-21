@@ -20,6 +20,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jamper91.base.Administrador;
@@ -30,31 +31,31 @@ public class DialogoCausal extends DialogFragment {
 
 	// Elementos graficos a usar
 	EditText txtCausal;
-	ImageView btnCamara,imgFoto;
+	TextView txtMensaje;
+	ImageView btnCamara, imgFoto;
 	View view;
-	//Variable que contiene todos Causales
-	Vector<String> causales=null;
-	//Variable que almacena la direccion de la foto a tomar
-	private String path=null,causal=null;
-	//Variables que recibe este dialogo, para funcionar bn
-	String enrutamiento="",rutaFoto=null;
+	// Variable que contiene todos Causales
+	Vector<String> causales = null;
+	// Variable que almacena la direccion de la foto a tomar
+	private String path = null, causal = null;
+	// Variables que recibe este dialogo, para funcionar bn
+	String enrutamiento = "", rutaFoto = null;
 	private final int REQUEST_CAMERA = 1;
 	Administrador admin = Administrador.getInstance(null);
-	
-	//Para determinar is tomo la foto
-	Boolean fc1=false;
-	
-	static DialogoCausal newInstance(String enrutamiento,String causal, String rutaFoto)
-	{
-		DialogoCausal dC=new DialogoCausal();
-		Bundle args=new Bundle();
+
+	// Para determinar is tomo la foto
+	Boolean fc1 = false;
+
+	static DialogoCausal newInstance(String enrutamiento, String causal,
+			String rutaFoto) {
+		DialogoCausal dC = new DialogoCausal();
+		Bundle args = new Bundle();
 		args.putString("enrutamiento", enrutamiento);
 		args.putString("causal", causal);
 		args.putString("rutaFoto", rutaFoto);
 		dC.setArguments(args);
 		return dC;
 	}
-	
 
 	public interface DialogoCausalListener {
 		public void onDialogAceptarClick(DialogFragment dialog, String causal,
@@ -74,64 +75,76 @@ public class DialogoCausal extends DialogFragment {
 					+ " debe implementar DialogoArchivosListener");
 		}
 	}
+
 	public void iniciarlizar() {
-		causales=admin.getAllElementos("Causales");
+		causales = admin.getAllElementos("Causales");
 		txtCausal = (EditText) view.findViewById(R.id.Dialogo_Causal_txtCausal);
-		btnCamara = (ImageView) view.findViewById(R.id.Dialogo_Causal_btnCamara);
+		txtMensaje = (TextView) view
+				.findViewById(R.id.Dialogo_Causal_txtMensaje);
+
+		btnCamara = (ImageView) view
+				.findViewById(R.id.Dialogo_Causal_btnCamara);
 		btnCamara.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-    			try {
-    				Intent i = new Intent("android.media.action.IMAGE_CAPTURE");
-    				File photo = new File(path);
-    				i.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photo));
-    				startActivityForResult(
-    						Intent.createChooser(i, "Capturar Foto"),
-    						REQUEST_CAMERA);
+			public void onClick(View v) {
+				try {
+					// Determino si el texto tiene un codigo valido
+					String texto = txtCausal.getText().toString();
+					if (Integer.parseInt(texto) >= 0) {
+						Intent i = new Intent(
+								"android.media.action.IMAGE_CAPTURE");
+						File photo = new File(path+texto+".jpg");
+						i.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photo));
+						startActivityForResult(
+								Intent.createChooser(i, "Capturar Foto"),
+								REQUEST_CAMERA);
+					}
+				} catch (NumberFormatException e) {
+					txtMensaje.setHint("Código de la causal invalido");
 
-    			} catch (Exception e) {
+				} catch (Exception e) {
 
-    			}
-            }
-        });
-		imgFoto=(ImageView)view.findViewById(R.id.Dialogo_causal_imgFoto);
-		//Luego de inicializar, muestro los valore spor default
-		if(causal!=null)
+				}
+			}
+		});
+		imgFoto = (ImageView) view.findViewById(R.id.Dialogo_causal_imgFoto);
+		// Luego de inicializar, muestro los valore spor default
+		if (causal != null)
 			txtCausal.setText(causal);
-		if(rutaFoto!=null)
-		{
-			File imgFile = new  File(rutaFoto);
-			if(imgFile.exists()){
+		if (rutaFoto != null) {
+			File imgFile = new File(rutaFoto);
+			if (imgFile.exists()) {
 
-			    Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-			    int nh = (int) ( myBitmap.getHeight() * (512.0 / myBitmap.getWidth()) );
-			    Bitmap scaled = Bitmap.createScaledBitmap(myBitmap, 512, nh, true);
-			    imgFoto.setImageBitmap(scaled);
-			    imgFoto.setVisibility(0);
+				Bitmap myBitmap = BitmapFactory.decodeFile(imgFile
+						.getAbsolutePath());
+				int nh = (int) (myBitmap.getHeight() * (512.0 / myBitmap
+						.getWidth()));
+				Bitmap scaled = Bitmap.createScaledBitmap(myBitmap, 512, nh,
+						true);
+				imgFoto.setImageBitmap(scaled);
+				imgFoto.setVisibility(0);
 
 			}
 		}
-		
 
-		
 	}
 
-		@Override
+	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-			  try {
-				  Log.i("onActivityResult","requestCode"+ requestCode+"");
-				  switch (requestCode)
-			        {
-			        	case REQUEST_CAMERA:    
-			        		rutaFoto=path;
-			        		fc1=true;
-			            break ;
-			                             
-			        }
-			} catch (Exception e) {
-				Log.e("onActivityResult", "Error: "+e.getMessage());
+		try {
+			Log.i("onActivityResult", "requestCode" + requestCode + "");
+			switch (requestCode) {
+			case REQUEST_CAMERA:
+				rutaFoto = path;
+				fc1 = true;
+				break;
+
 			}
-	        
+		} catch (Exception e) {
+			Log.e("onActivityResult", "Error: " + e.getMessage());
 		}
+
+	}
+
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -148,7 +161,6 @@ public class DialogoCausal extends DialogFragment {
 								// Me encargo de agrega la causal a la base de
 								// datos y luego se la paso al que llamo este
 								// dialogo
-								
 
 							}
 						})
@@ -161,86 +173,86 @@ public class DialogoCausal extends DialogFragment {
 						});
 		return builder.create();
 	}
+
 	@Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        enrutamiento = getArguments().getString("enrutamiento");
-        rutaFoto=getArguments().getString("rutaFoto");
-        causal=getArguments().getString("causal");
-        //Log.i("rutaFoto", rutaFoto);
-        //Log.i("causal", causal);
-        
-        path=admin.getRutaSalida()+"/Causal/Causal-"+enrutamiento+".jpg";
-        Log.i("Path: ",path);
-        
-        
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		enrutamiento = getArguments().getString("enrutamiento");
+		rutaFoto = getArguments().getString("rutaFoto");
+		causal = getArguments().getString("causal");
+		// Log.i("rutaFoto", rutaFoto);
+		// Log.i("causal", causal);
+
+		path = admin.getRutaSalida() + "/Causal/" + enrutamiento + "_Causal_";
+		Log.i("Path: ", path);
+
 	}
-	
-	private boolean esObligatorio(String c)
-	{
-		boolean r=false;
-		//Busco el causal con codigo c
+
+	private boolean esObligatorio(String c) {
+		boolean r = false;
+		// Busco el causal con codigo c
 		for (int i = 0; i < causales.size(); i++) {
-			String cau=causales.get(i);
-			String aux[]=cau.split(",");
-			if(aux[0].equals(c))
-			{
+			String cau = causales.get(i);
+			String aux[] = cau.split(",");
+			if (aux[0].equals(c)) {
 				Log.i("Causal: esObligatorio", aux[2]);
-				if(aux[2].equals("1;"))
-					r=true;
+				if (aux[2].equals("1;"))
+					r = true;
 				break;
 			}
 		}
-		
+
 		return r;
 	}
-	
-	//Para evitar que se cierre el dialgo si los datos estan incompletos
+
+	// Para evitar que se cierre el dialgo si los datos estan incompletos
 	@Override
-	public void onStart()
-	{
-	    super.onStart();    //super.onStart() is where dialog.show() is actually called on the underlying dialog, so we have to do it after this point
-	    AlertDialog d = (AlertDialog)getDialog();
-	    if(d != null)
-	    {
-	        Button positiveButton = (Button) d.getButton(Dialog.BUTTON_POSITIVE);
-	        positiveButton.setOnClickListener(new View.OnClickListener()
-	                {
-	                    @Override
-	                    public void onClick(View v)
-	                    {
-	                    	String men="";
-	                    	causal = txtCausal.getText().toString();
-	                        Boolean wantToCloseDialog = true,obligatorio=esObligatorio(causal);
-	                        
-	                        Log.i("causal: ",causal+"");
-	                        Log.i("Obligatorio: ",obligatorio+"");
-	                        Log.i("fc1: ",fc1+"");
-	                        if(rutaFoto==null)
-	                        	rutaFoto="";
-	                        
-	                        if(causal.length()==0)
-	                        	causal=null;
-	                        if(causal==null && fc1==false)
-	                        	wantToCloseDialog=true;
-	                        else if(causal.length()>0 && fc1==false && obligatorio){
-	                        	wantToCloseDialog=false;
-	                        	men="Foto Obligatoria";
-	                        }
-	                        
-	                        if(wantToCloseDialog)
-	                        {
-	                        	mListener.onDialogAceptarClick(
-										DialogoCausal.this, causal, rutaFoto);
-	                            dismiss();
-	                        }else{
-	                        	Toast.makeText(getActivity(), men, Toast.LENGTH_SHORT).show();
-	                        }
-	                        
-	                        //else dialog stays open. Make sure you have an obvious way to close the dialog especially if you set cancellable to false.
-	                    }
-	                });
-	    }
+	public void onStart() {
+		super.onStart(); // super.onStart() is where dialog.show() is actually
+							// called on the underlying dialog, so we have to do
+							// it after this point
+		AlertDialog d = (AlertDialog) getDialog();
+		if (d != null) {
+			Button positiveButton = (Button) d
+					.getButton(Dialog.BUTTON_POSITIVE);
+			positiveButton.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					String men = "";
+					causal = txtCausal.getText().toString();
+					Boolean wantToCloseDialog = true, obligatorio = esObligatorio(causal);
+
+					Log.i("causal: ", causal + "");
+					Log.i("Obligatorio: ", obligatorio + "");
+					Log.i("fc1: ", fc1 + "");
+					if (rutaFoto == null)
+						rutaFoto = "";
+
+					if (causal.length() == 0)
+						causal = null;
+					if (causal == null && fc1 == false)
+						wantToCloseDialog = true;
+					else if (causal.length() > 0 && fc1 == false && obligatorio) {
+						wantToCloseDialog = false;
+						men = "Foto Obligatoria";
+					}
+
+					if (wantToCloseDialog) {
+						mListener.onDialogAceptarClick(DialogoCausal.this,
+								causal, rutaFoto);
+						dismiss();
+					} else {
+						// Toast.makeText(getActivity(), men,
+						// Toast.LENGTH_SHORT).show();
+						txtMensaje.setText(men);
+					}
+
+					// else dialog stays open. Make sure you have an obvious way
+					// to close the dialog especially if you set cancellable to
+					// false.
+				}
+			});
+		}
 	}
 
 }
